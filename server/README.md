@@ -7,4 +7,10 @@ This server uses poetry as a package manager. To install dependencies, run
 `poetry install`
 
 ## Running instructions
-To run the app,
+To run the app from the base directory:
+`python3 server/app.py`
+
+or, from the server directory,
+`poetry run flask run`.
+
+This will start a local server at port 5000
