@@ -21,7 +21,7 @@ def register():
 @app.route("/applications")
 def application():
     """
-    get /applications/<id>: gets the application with the given id
+    get /applications/<id>/: gets the application with the given id
     """
     return
 
@@ -29,10 +29,10 @@ def application():
 @app.route("/scholarships")
 def all_scholarships():
     """
-    get /scholarships: returns all scholarship in db
-    get /scholarships/<id>: returns specific scholarship with given id including its applications (ids) and judges (ids)
-    post /scholarships: creates new scholarship and returns new scholarship data
-    delete /scholarships/<id>: deletes the scholarship with the given id
+    get /scholarships/: returns all scholarship in db
+    get /scholarships/<id>/: returns specific scholarship with given id including its applications (ids) and judges (ids)
+    post /scholarships/: creates new scholarship and returns new scholarship data
+    delete /scholarships/<id>/: deletes the scholarship with the given id
     """
     return
 
@@ -40,9 +40,9 @@ def all_scholarships():
 @app.route("/organizations")
 def organizations():
     """
-    get /organizations
-    get /organizatons/<id>: gets the organization with the id
-    get /organizations/<id>/scholarships:
+    get /organizations/
+    get /organizatons/<id>/: gets the organization with the id
+    get /organizations/<id>/scholarships/:
     """
     return
 
@@ -51,7 +51,7 @@ def organizations():
 def judge():
     """
     get /judge/scholarship/<id>/: gets the criterias for the given scholarship
-    post /judge/scholarship/<id>/application/<id>: creates new scorecard with the scores the judge gave for each criteria
+    post /judge/scholarship/<id>/application/<id>/: creates new scorecard with the scores the judge gave for each criteria
     """
     return
 
@@ -60,7 +60,7 @@ def judge():
 def scorecard():
     """
     get /scorecard/<id>/: gets the scorecard with given id
-    get /scorecard/scholarship/<id>: gets the scorecards for the given scholarship id
+    get /scorecard/scholarship/<id>/: gets the scorecards for the given scholarship id
     """
     return
 
@@ -77,7 +77,7 @@ def notification():
 @app.route("/mcdm")
 def mcdm():
     """
-    get /mcdm/schoolarship/<id>: runs the mcdm algorithm, including querying for all scorecards
+    get /mcdm/schoolarship/<id>/: runs the mcdm algorithm, including querying for all scorecards
     """
     return
 
