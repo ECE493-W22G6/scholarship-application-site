@@ -7,7 +7,7 @@ function App() {
   return (
     <div className="App">
       <nav
-        style={{borderBottom: 'solid 1px', paddingBottom: '1rem'}}>
+        className='App-header'>
         <Link to="/login">Login</Link> | {' '}
         <Link to="/register">Register</Link>
       </nav>

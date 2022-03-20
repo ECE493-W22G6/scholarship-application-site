@@ -1,7 +1,15 @@
 from flask import Flask
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # IMPORTANT: remember to add "/" at the end
 app = Flask(__name__)
+
+
+@app.route("/hello")
+def hello_world():
+    return {"hello": "hello world!"}
 
 
 @app.route("/user")
@@ -83,4 +91,4 @@ def mcdm():
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=5000)

@@ -6,8 +6,21 @@ To change python version, install `pyenv` and run the following commands:
 This server uses poetry as a package manager. To install dependencies, run
 `poetry install`
 
-## Running instructions
+
+## Development instructions
+To start up a virtual env via poetry and activate it:
+`poetry shell`
+
+### Running instructions
 To run the server:
 `poetry run flask run`.
 
 This will start a local server at port 5000
+
+## Misc info
+### Env file
+`.flaskenv`: points to the flask app (api/api.py) and enables flask debug mode (development)
+
+### Dependencies (pyproject.toml)
+- flask
+- python-dotenv
