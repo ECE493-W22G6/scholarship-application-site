@@ -1,10 +1,19 @@
-from flask import Flask
+import os
+from flask import Flask, make_response, request
+from flask_api import status
 from dotenv import load_dotenv
+from flask_pymongo import PyMongo
+from werkzeug.security import generate_password_hash, check_password_hash
+
+from db import db
 
 load_dotenv()
+MONGO_CLIENT = os.getenv("MONGO_CLIENT")
 
 # IMPORTANT: remember to add "/" at the end
 app = Flask(__name__)
+app.config["MONGO_URI"] = MONGO_CLIENT
+mongo = PyMongo(app)
 
 
 @app.route("/hello")
@@ -12,7 +21,7 @@ def hello_world():
     return {"hello": "hello world!"}
 
 
-@app.route("/user")
+@app.route("/users/register/", methods=["POST"])
 def register():
     """
     post /user/register/
@@ -23,7 +32,44 @@ def register():
     put /user/password/: change user password (requires old password to be given)
     put /user/icon/: change user icon (requires check if user is org, else fail)
     """
-    return
+    email = request.form.get("email")
+    password = request.form.get("password")
+    first_name = request.form.get("first_name")
+    last_name = request.form.get("last_name")
+
+    user = db.users.find_one({"email": email})
+
+    if user:
+        return "User already exists", status.HTTP_409_CONFLICT
+
+    new_user = {
+        "email": email,
+        "first_name": first_name,
+        "last_name": last_name,
+        "password": generate_password_hash(password, method="sha256"),
+    }
+
+    db.users.insert_one(new_user)
+
+    return "Success", status.HTTP_201_CREATED
+
+
+@app.route("/users/login/", methods=["POST"])
+def login():
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    user = db.users.find_one({"email": email})
+
+    # check if the user actually exists
+    # take the user-supplied password, hash it, and compare it to the hashed password in the database
+    if not user:
+        return "User with given email not found", status.HTTP_401_UNAUTHORIZED
+    if not check_password_hash(user["password"], password):
+        return "Password is incorrect", status.HTTP_401_UNAUTHORIZED
+
+    # success
+    return "Login successful", status.HTTP_200_OK
 
 
 @app.route("/applications")

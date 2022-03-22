@@ -8,6 +8,11 @@ authors = ["shadowciaw <sqli@ualberta.ca>"]
 python = "^3.10"
 Flask = "^2.0.3"
 python-dotenv = "^0.19.2"
+Flask-PyMongo = "^2.3.0"
+Werkzeug = "^2.0.3"
+pymongo = {version = "^4.0.2", extras = ["srv"]}
+requests = "^2.27.1"
+Flask-API = "^3.0.post1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
