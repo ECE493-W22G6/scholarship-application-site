@@ -4,6 +4,7 @@ from flask_api import status
 from dotenv import load_dotenv
 from flask_pymongo import PyMongo
 from werkzeug.security import generate_password_hash, check_password_hash
+from bson.objectid import ObjectId
 
 from db import db
 
@@ -15,27 +16,26 @@ app = Flask(__name__)
 app.config["MONGO_URI"] = MONGO_CLIENT
 mongo = PyMongo(app)
 
+"""
+TODO:
+- post /user/<id>/application/: updates the default application of the user, creating one if there isn't one
 
-@app.route("/hello")
-def hello_world():
-    return {"hello": "hello world!"}
+- get /applications/<id>/: gets the application with the given id
+
+- get /scholarships/: returns all scholarship in db
+- get /scholarships/<id>/: returns specific scholarship with given id including its applications (ids) and judges (ids)
+- post /scholarships/: creates new scholarship and returns new scholarship data
+- delete /scholarships/<id>/: deletes the scholarship with the given id
+"""
 
 
 @app.route("/users/register/", methods=["POST"])
 def register():
-    """
-    post /user/register/
-    post /user/login/
-    get /user/<id>/: gives user profile with default application id (?)
-
-    post /user/<id>/application/: updates the default application of the user, creating one if there isn't one
-    put /user/password/: change user password (requires old password to be given)
-    put /user/icon/: change user icon (requires check if user is org, else fail)
-    """
     email = request.form.get("email")
     password = request.form.get("password")
     first_name = request.form.get("first_name")
     last_name = request.form.get("last_name")
+    user_type = request.form.get("type")  # student, organization, judge
 
     user = db.users.find_one({"email": email})
 
@@ -47,6 +47,7 @@ def register():
         "first_name": first_name,
         "last_name": last_name,
         "password": generate_password_hash(password, method="sha256"),
+        "type": user_type,
     }
 
     db.users.insert_one(new_user)
@@ -64,7 +65,7 @@ def login():
     # check if the user actually exists
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user:
-        return "User with given email not found", status.HTTP_401_UNAUTHORIZED
+        return "User with given email not found", status.HTTP_404_NOT_FOUND
     if not check_password_hash(user["password"], password):
         return "Password is incorrect", status.HTTP_401_UNAUTHORIZED
 
@@ -72,41 +73,123 @@ def login():
     return "Login successful", status.HTTP_200_OK
 
 
-@app.route("/applications")
+@app.route("/users/<user_id>/password", methods=["POST"])
+def change_password(user_id):
+    user = db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return "User with given email not found", status.HTTP_404_NOT_FOUND
+    current_password = request.form.current_password
+    if not check_password_hash(user["password"], current_password):
+        return "Current password is incorrect", status.HTTP_401_UNAUTHORIZED
+
+    new_password = request.form.new_password
+    _ = db.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": {"password ": generate_password_hash(new_password, method="sha256")}},
+    )
+
+    return "Password changed successfully", status.HTTP_200_OK
+
+
+@app.route("/users/<user_id>/icon", methods=["POST"])
+def change_icon(user_id):
+    user = db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return "User with given email not found", status.HTTP_404_NOT_FOUND
+    if user["type"] != "organization":
+        return (
+            "User does not have sufficient permission to change icon",
+            status.HTTP_401_UNAUTHORIZED,
+        )
+
+    _ = db.users.update_one(
+        {"_id": ObjectId(user_id)}, {"$set": {"icon": request.form.icon_url}}
+    )
+
+    return "Icon changed successfully", status.HTTP_200_OK
+
+
+@app.route("/users/<user_id>", methods=["GET"])
+def get_user(user_id):
+    user = db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return "User not found", status.HTTP_404_NOT_FOUND
+
+    del user["_id"]
+    del user["password"]
+    return user, status.HTTP_200_OK
+
+
+@app.route("/applications", methods=["POST"])
 def application():
-    """
-    get /applications/<id>/: gets the application with the given id
-    """
+    # TODO
+    # get user id
+    # get scholarship id
+    # add application id to scholarship applications
+    # add application to collection
     return
 
 
-@app.route("/scholarships")
-def all_scholarships():
-    """
-    get /scholarships/: returns all scholarship in db
-    get /scholarships/<id>/: returns specific scholarship with given id including its applications (ids) and judges (ids)
-    post /scholarships/: creates new scholarship and returns new scholarship data
-    delete /scholarships/<id>/: deletes the scholarship with the given id
-    """
-    return
+@app.route("/scholarships/", methods=["GET", "POST"])
+def scholarships():
+    if request.method == "GET":
+        return db.scholarships.find({}), status.HTTP_200_OK
+    elif request.method == "POST":
+        user_id = request.form.get("user_id")
+        user = db.users.find_one({"_id": ObjectId(user_id)})
+        if not user:
+            return "User does not exist", status.HTTP_404_NOT_FOUND
+        if user.get("type") != "organization":
+            return "User cannot create scholarships", status.HTTP_401_UNAUTHORIZED
+
+        # name = request.form.get("name")
+        # fields = request.form.get("fields")
+        # criteria = request.form.get("criteria")
+        # new_scholarship = {"name": name, "fields": fields, "criteria": criteria}
+
+        new_scholarship = request.get_json()
+
+        db.scholarships.insert_one(new_scholarship)
+
+        return "Scholarship successfully created", status.HTTP_201_CREATED
 
 
-@app.route("/organizations")
-def organizations():
-    """
-    get /organizations/
-    get /organizatons/<id>/: gets the organization with the id
-    get /organizations/<id>/scholarships/:
-    """
-    return
+@app.route("/scholarships/<scholarship_id>", methods=["GET"])
+def get_scholarship(scholarship_id):
+    scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
+    if not scholarship:
+        return "Scholarship not found", status.HTTP_404_NOT_FOUND
+    return scholarship
 
 
-@app.route("/judge")
+@app.route("/scholarship/<scholarship_id>/applications", methods=["GET"])
+def get_scholarship_applications(scholarship_id):
+    scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
+    if not scholarship:
+        return "Scholarship not found", status.HTTP_404_NOT_FOUND
+    return scholarship.get("applications")
+
+
+@app.route("/scholarships/<scholarship_id>/add_judge/", methods=["GET", "POST"])
+def add_judge(scholarship_id):
+    if request.method == "GET":
+        return db.scholarships.find({"_id": ObjectId(scholarship_id)}, {"judges": 1})
+    elif request.method == "POST":
+        judges = request.form.get("judges")
+        db.scholarship.update_one(
+            {"_id": ObjectId(scholarship_id)},
+            {"$set": {"judges ": judges}},
+        )
+        return "Judges successfully added", status.HTTP_200_OK
+
+
+@app.route("/judge/scholarship/<scholarship_id>/")
 def judge():
     """
     get /judge/scholarship/<id>/: gets the criterias for the given scholarship
     post /judge/scholarship/<id>/application/<id>/: creates new scorecard with the scores the judge gave for each criteria
     """
+
     return
 
 
