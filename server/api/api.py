@@ -250,17 +250,23 @@ def scorecard(scorecard_id):
 def get_scorecards(scholarship_id):
     scorecards = db.scorecards.find({"scholarship_id": scholarship_id})
     if not scorecards:
-        return "No scorecards found for given scholarship", status.HTTP_404_NOT_FOUND
-    return scorecards
+        return "No scorecards found for given scholarship", status.HTTP_200_OK
+    return scorecards, status.HTTP_200_OK
 
 
-@app.route("/notification")
-def notification():
-    """
-    get /notification/user/<id>/: gets all the notifications for a user
-    post /notification/user/<id>/: adds the payload notification to the user's notification list
-    """
-    return
+@app.route("/notification/user/<user_id>/", methods=["GET", "POST"])
+def get_notification(user_id):
+    if request.method == "GET":
+        notifications = db.notifications.find({"user_id": user_id})
+        if not notifications:
+            return "User does not have any notifications", status.HTTP_200_OK
+        return notifications
+    elif request.method == "POST":
+        notification = {"user_id": user_id, "data": request.get_data()}
+        return {
+            "message": "Notification successfully added",
+            "notification_id": notification.inserted_id,
+        }, status.HTTP_200_OK
 
 
 @app.route("/mcdm")
