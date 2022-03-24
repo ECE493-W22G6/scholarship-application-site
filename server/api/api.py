@@ -19,13 +19,6 @@ mongo = PyMongo(app)
 """
 TODO:
 - post /user/<id>/application/: updates the default application of the user, creating one if there isn't one
-
-- get /applications/<id>/: gets the application with the given id
-
-- get /scholarships/: returns all scholarship in db
-- get /scholarships/<id>/: returns specific scholarship with given id including its applications (ids) and judges (ids)
-- post /scholarships/: creates new scholarship and returns new scholarship data
-- delete /scholarships/<id>/: deletes the scholarship with the given id
 """
 
 
@@ -121,13 +114,48 @@ def get_user(user_id):
 
 
 @app.route("/applications", methods=["POST"])
-def application():
-    # TODO
+def submit_application():
     # get user id
+    user_id = request.data.get("user_id")
+    user = db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return "User does not exist", status.HTTP_404_NOT_FOUND
+    if user.get("type") != "student":
+        return "User cannot create applications", status.HTTP_401_UNAUTHORIZED
+
     # get scholarship id
+    scholarship_id = request.data.get("scholarship_id")
+    scholarship = db.scholarships.find_one({"_id": ObjectId(scholarship_id)})
+    if not scholarship:
+        return "Scholarship does not exist", status.HTTP_404_NOT_FOUND
+
+    new_application = {request.get_data()}
+
+    application = db.applications.insert_one(new_application)
     # add application id to scholarship applications
-    # add application to collection
+    db.scholarships.update(
+        {"_id": ObjectId(scholarship_id)},
+        [
+            {
+                "$set": {
+                    "applications": {
+                        "$concat": ["$applications", application.inserted_id]
+                    }
+                }
+            }
+        ],
+        {"multi": False},
+    )
     return
+
+
+@app.route("/applications/<application_id>", methods=["GET"])
+def get_applications(application_id):
+    application = db.applications.find_one({"_id": ObjectId(application_id)})
+    if not application:
+        return "Application does not exist", status.HTTP_404_NOT_FOUNDs
+
+    return application
 
 
 @app.route("/scholarships/", methods=["GET", "POST"])
@@ -183,23 +211,47 @@ def add_judge(scholarship_id):
         return "Judges successfully added", status.HTTP_200_OK
 
 
-@app.route("/judge/scholarship/<scholarship_id>/")
-def judge():
-    """
-    get /judge/scholarship/<id>/: gets the criterias for the given scholarship
-    post /judge/scholarship/<id>/application/<id>/: creates new scorecard with the scores the judge gave for each criteria
-    """
+@app.route("/application/<application_id>/judge/", methods=["POST"])
+def judge_application(application_id):
+    user_id = request.data.get("user_id")
+    user = db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return "User does not exist", status.HTTP_404_NOT_FOUND
+    if user.get("type") != "judge":
+        return "User cannot create applications", status.HTTP_401_UNAUTHORIZED
 
-    return
+    application = db.applications.find_one({"_id": ObjectId(application_id)})
+    scholarship_id = application.get("scholarship_id")
+
+    scorecard = {
+        "scholarship_id": scholarship_id,
+        "application_id": application_id,
+        "judge_id": user_id,
+        "score": request.get_data(),
+    }
+    inserted_scorecard = db.scorecards.insert_one(scorecard)
+
+    return {
+        "message": "Scorecard successfully created",
+        "id": inserted_scorecard.inserted_id,
+    }, status.HTTP_201_CREATED
 
 
-@app.route("/scorecard")
-def scorecard():
-    """
-    get /scorecard/<id>/: gets the scorecard with given id
-    get /scorecard/scholarship/<id>/: gets the scorecards for the given scholarship id
-    """
-    return
+@app.route("/scorecard/<scorecard_id>/")
+def scorecard(scorecard_id):
+    scorecard = db.scorecards.find_one({"_id": ObjectId(scorecard_id)})
+    if not scorecard:
+        return "Scorecard not found", status.HTTP_404_NOT_FOUND
+
+    return scorecard, status.HTTP_200_OK
+
+
+@app.route("/scorecard/scholarship/<scholarship_id>/")
+def get_scorecards(scholarship_id):
+    scorecards = db.scorecards.find({"scholarship_id": scholarship_id})
+    if not scorecards:
+        return "No scorecards found for given scholarship", status.HTTP_404_NOT_FOUND
+    return scorecards
 
 
 @app.route("/notification")
