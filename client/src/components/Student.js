@@ -2,6 +2,9 @@ import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import './App.css';
 
+import NotificationsNoneTwoToneIcon from '@mui/icons-material/NotificationsNoneTwoTone';
+
+
 const Student = () => {
   const [name, setName] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
@@ -23,8 +26,22 @@ const Student = () => {
       <nav>
         <Link to="/scholarshipList">ScholarshipList</Link> | {' '}
         <Link to="/settings">Settings</Link> | {' '}
-        <Link to="/notifications">Notifications</Link>
+        <Link to="/notifications">Notifications
+        
+        </Link>
+
+        <NotificationsNoneTwoToneIcon
+          component={Link}
+          to="/notifications">Notifications
+          
+
+
+        </NotificationsNoneTwoToneIcon>
+
+        
       </nav>
+
+
     </div>
   );
 };

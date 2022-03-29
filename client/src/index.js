@@ -9,6 +9,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Student from './components/Student';
 import Organization from './components/Organization';
+import Notifications from './components/Notifications';
 
 // code referenced from https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react
 // You can choose your kind of history here (e.g. browserHistory)
@@ -25,6 +26,7 @@ render(
         <Route path="/register" element={<Register/>}></Route>
         <Route path="/student" element={<Student/>}></Route>
         <Route path="/organization" element={<Organization/>}></Route>
+        {/* <Route path="/notifications" element={<Notifications/>}></Route> */}
       </Routes>
 
     </BrowserRouter>,
