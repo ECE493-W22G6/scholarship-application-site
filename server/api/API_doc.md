@@ -128,11 +128,13 @@ Submits an application for a scholarship from a user
 data: {
     user_id: string,
     scholarship_id: string
-    <student data>
+    <application>
 }
 
 Success response:
-- 
+- message: Application successfully submitted
+- application_id: application.inserted_id
+- code: 200 ok
 
 Failure response:
 - Bad user id:
@@ -141,22 +143,44 @@ Failure response:
 - Bad user type:
     - message: User cannot create applications
     - code: 401 unauthorized
+- bad scholarship id:
+    - message: Scholarship does not exist
+    - code: 404 not found
 
-### GET `/applications/`
-Gets all applications in the database
-
-- Request body:
+### GET `/applications/<application_id>/`
+Gets the specified application
 
 Success response:
-- [<scholarship> ...]
+- <application>
+- code: 200 ok
 
 Failure response:
+- bad application id
+    - message: Application does not exist
+    - code: 404 not found
 
 ### POST `/application/<application_id>/judge/`
 Creates a new scorecard for the application by the current user
 **Only permitted for judge type accounts**
 
+Request body:
+- user_id: string
 
+Success response:
+- message: Scorecard succesfully created
+- id: inserted_scorecard.inserted_id
+- code: 201 created
+
+Failure response:
+- bad user id
+    - message: "User does not exist"
+    - code: 404 not found
+- bad user type:
+    - User cannot judge applications
+    - code: 401 unauthorized
+- bad application id:
+    - message: Application not found
+    - code: 404 not found
 
 ===============================
 

@@ -145,7 +145,7 @@ def submit_application():
     scholarship_id = request.data.get("scholarship_id")
     scholarship = db.scholarships.find_one({"_id": ObjectId(scholarship_id)})
     if not scholarship:
-        return "Scholarship does not exist", status.HTTP_404_NOT_FOUND
+        return {"message": "Scholarship does not exist"}, status.HTTP_404_NOT_FOUND
 
     new_application = {request.get_data()}
 
@@ -174,9 +174,9 @@ def submit_application():
 def get_applications(application_id):
     application = db.applications.find_one({"_id": ObjectId(application_id)})
     if not application:
-        return "Application does not exist", status.HTTP_404_NOT_FOUNDs
+        return {"message": "Application does not exist"}, status.HTTP_404_NOT_FOUNDs
 
-    return application
+    return application, status.HTTP_200_OK
 
 
 @app.route("/application/<application_id>/judge/", methods=["POST"])
@@ -186,9 +186,12 @@ def judge_application(application_id):
     if not user:
         return "User does not exist", status.HTTP_404_NOT_FOUND
     if user.get("type") != "judge":
-        return "User cannot create applications", status.HTTP_401_UNAUTHORIZED
+        return "User cannot judge applications", status.HTTP_401_UNAUTHORIZED
 
     application = db.applications.find_one({"_id": ObjectId(application_id)})
+    if not application:
+        return {"message": "Application not found"}, status.HTTP_404_NOT_FOUND
+
     scholarship_id = application.get("scholarship_id")
 
     scorecard = {
