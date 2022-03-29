@@ -16,11 +16,6 @@ app = Flask(__name__)
 app.config["MONGO_URI"] = MONGO_CLIENT
 mongo = PyMongo(app)
 
-"""
-TODO:
-- post /user/<id>/application/: updates the default application of the user, creating one if there isn't one
-"""
-
 
 @app.route("/users/register/", methods=["POST"])
 def register():
@@ -33,7 +28,9 @@ def register():
     user = db.users.find_one({"email": email})
 
     if user:
-        return "User already exists", status.HTTP_409_CONFLICT
+        return {
+            "message": "User already exists",
+        }, status.HTTP_409_CONFLICT
 
     new_user = {
         "email": email,
@@ -45,7 +42,9 @@ def register():
 
     db.users.insert_one(new_user)
 
-    return "Success", status.HTTP_201_CREATED
+    return {
+        "message": "Success",
+    }, status.HTTP_201_CREATED
 
 
 @app.route("/users/login/", methods=["POST"])
@@ -58,22 +57,32 @@ def login():
     # check if the user actually exists
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
     if not user:
-        return "User with given email not found", status.HTTP_404_NOT_FOUND
+        return {
+            "message": "User with given email not found",
+        }, status.HTTP_404_NOT_FOUND
     if not check_password_hash(user["password"], password):
-        return "Password is incorrect", status.HTTP_401_UNAUTHORIZED
+        return {
+            "message": "Password is incorrect",
+        }, status.HTTP_401_UNAUTHORIZED
 
     # success
-    return "Login successful", status.HTTP_200_OK
+    return {
+        "message": "Login successful",
+    }, status.HTTP_200_OK
 
 
-@app.route("/users/<user_id>/password", methods=["POST"])
+@app.route("/users/<user_id>/password/", methods=["POST"])
 def change_password(user_id):
     user = db.users.find_one({"_id": ObjectId(user_id)})
     if not user:
-        return "User with given email not found", status.HTTP_404_NOT_FOUND
+        return {
+            "message": "User with given email not found",
+        }, status.HTTP_404_NOT_FOUND
     current_password = request.form.current_password
     if not check_password_hash(user["password"], current_password):
-        return "Current password is incorrect", status.HTTP_401_UNAUTHORIZED
+        return {
+            "message": "Current password is incorrect",
+        }, status.HTTP_401_UNAUTHORIZED
 
     new_password = request.form.new_password
     _ = db.users.update_one(
@@ -81,28 +90,33 @@ def change_password(user_id):
         {"$set": {"password ": generate_password_hash(new_password, method="sha256")}},
     )
 
-    return "Password changed successfully", status.HTTP_200_OK
+    return {
+        "message": "Password changed successfully",
+    }, status.HTTP_200_OK
 
 
-@app.route("/users/<user_id>/icon", methods=["POST"])
+@app.route("/users/<user_id>/icon/", methods=["POST"])
 def change_icon(user_id):
     user = db.users.find_one({"_id": ObjectId(user_id)})
     if not user:
-        return "User with given email not found", status.HTTP_404_NOT_FOUND
+        return {
+            "message": "User with given email not found",
+        }, status.HTTP_404_NOT_FOUND
     if user["type"] != "organization":
-        return (
-            "User does not have sufficient permission to change icon",
-            status.HTTP_401_UNAUTHORIZED,
-        )
+        return {
+            "message": "User does not have sufficient permission to change icon",
+        }, status.HTTP_401_UNAUTHORIZED
 
     _ = db.users.update_one(
         {"_id": ObjectId(user_id)}, {"$set": {"icon": request.form.icon_url}}
     )
 
-    return "Icon changed successfully", status.HTTP_200_OK
+    return {
+        "message": "Icon changed successfully",
+    }, status.HTTP_200_OK
 
 
-@app.route("/users/<user_id>", methods=["GET"])
+@app.route("/users/<user_id>/", methods=["GET"])
 def get_user(user_id):
     user = db.users.find_one({"_id": ObjectId(user_id)})
     if not user:
@@ -113,15 +127,19 @@ def get_user(user_id):
     return user, status.HTTP_200_OK
 
 
-@app.route("/applications", methods=["POST"])
+@app.route("/applications/", methods=["POST"])
 def submit_application():
     # get user id
     user_id = request.data.get("user_id")
     user = db.users.find_one({"_id": ObjectId(user_id)})
     if not user:
-        return "User does not exist", status.HTTP_404_NOT_FOUND
+        return {
+            "message": "User does not exist",
+        }, status.HTTP_404_NOT_FOUND
     if user.get("type") != "student":
-        return "User cannot create applications", status.HTTP_401_UNAUTHORIZED
+        return {
+            "message": "User cannot create applications",
+        }, status.HTTP_401_UNAUTHORIZED
 
     # get scholarship id
     scholarship_id = request.data.get("scholarship_id")
@@ -146,7 +164,10 @@ def submit_application():
         ],
         {"multi": False},
     )
-    return
+    return {
+        "message": "Application successfully submitted",
+        "application_id": application.inserted_id,
+    }, status.HTTP_200_OK
 
 
 @app.route("/applications/<application_id>", methods=["GET"])
@@ -156,59 +177,6 @@ def get_applications(application_id):
         return "Application does not exist", status.HTTP_404_NOT_FOUNDs
 
     return application
-
-
-@app.route("/scholarships/", methods=["GET", "POST"])
-def scholarships():
-    if request.method == "GET":
-        return db.scholarships.find({}), status.HTTP_200_OK
-    elif request.method == "POST":
-        user_id = request.form.get("user_id")
-        user = db.users.find_one({"_id": ObjectId(user_id)})
-        if not user:
-            return "User does not exist", status.HTTP_404_NOT_FOUND
-        if user.get("type") != "organization":
-            return "User cannot create scholarships", status.HTTP_401_UNAUTHORIZED
-
-        # name = request.form.get("name")
-        # fields = request.form.get("fields")
-        # criteria = request.form.get("criteria")
-        # new_scholarship = {"name": name, "fields": fields, "criteria": criteria}
-
-        new_scholarship = request.get_json()
-
-        db.scholarships.insert_one(new_scholarship)
-
-        return "Scholarship successfully created", status.HTTP_201_CREATED
-
-
-@app.route("/scholarships/<scholarship_id>", methods=["GET"])
-def get_scholarship(scholarship_id):
-    scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
-    if not scholarship:
-        return "Scholarship not found", status.HTTP_404_NOT_FOUND
-    return scholarship
-
-
-@app.route("/scholarship/<scholarship_id>/applications", methods=["GET"])
-def get_scholarship_applications(scholarship_id):
-    scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
-    if not scholarship:
-        return "Scholarship not found", status.HTTP_404_NOT_FOUND
-    return scholarship.get("applications")
-
-
-@app.route("/scholarships/<scholarship_id>/add_judge/", methods=["GET", "POST"])
-def add_judge(scholarship_id):
-    if request.method == "GET":
-        return db.scholarships.find({"_id": ObjectId(scholarship_id)}, {"judges": 1})
-    elif request.method == "POST":
-        judges = request.form.get("judges")
-        db.scholarship.update_one(
-            {"_id": ObjectId(scholarship_id)},
-            {"$set": {"judges ": judges}},
-        )
-        return "Judges successfully added", status.HTTP_200_OK
 
 
 @app.route("/application/<application_id>/judge/", methods=["POST"])
@@ -237,20 +205,86 @@ def judge_application(application_id):
     }, status.HTTP_201_CREATED
 
 
-@app.route("/scorecard/<scorecard_id>/")
+@app.route("/scholarships/", methods=["GET", "POST"])
+def scholarships():
+    if request.method == "GET":
+        return db.scholarships.find({}), status.HTTP_200_OK
+    elif request.method == "POST":
+        user_id = request.data.get("user_id")
+        user = db.users.find_one({"_id": ObjectId(user_id)})
+        if not user:
+            return {"message": "User does not exist"}, status.HTTP_404_NOT_FOUND
+        if user.get("type") != "organization":
+            return {
+                "message": "User cannot create scholarships"
+            }, status.HTTP_401_UNAUTHORIZED
+
+        # name = request.form.get("name")
+        # fields = request.form.get("fields")
+        # criteria = request.form.get("criteria")
+        # new_scholarship = {"name": name, "fields": fields, "criteria": criteria}
+
+        new_scholarship = request.get_data()
+
+        db.scholarships.insert_one(new_scholarship)
+
+        return {"message": "Scholarship successfully created"}, status.HTTP_201_CREATED
+
+
+@app.route("/scholarships/<scholarship_id>/", methods=["GET"])
+def get_scholarship(scholarship_id):
+    scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
+    if not scholarship:
+        return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
+    return scholarship, status.HTTP_200_OK
+
+
+@app.route("/scholarships/<scholarship_id>/applications/", methods=["GET"])
+def get_scholarship_applications(scholarship_id):
+    scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
+    if not scholarship:
+        return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
+    return scholarship.get("applications"), status.HTTP_200_OK
+
+
+@app.route("/scholarships/<scholarship_id>/judge/", methods=["GET", "POST"])
+def judge(scholarship_id):
+    if request.method == "GET":
+        scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
+        if not scholarship:
+            return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
+        return (
+            db.scholarships.find({"_id": ObjectId(scholarship_id)}, {"judges": 1}),
+            status.HTTP_200_OK,
+        )
+    elif request.method == "POST":
+        scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
+        if not scholarship:
+            return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
+        judges = request.form.get("judges")
+        db.scholarship.update_one(
+            {"_id": ObjectId(scholarship_id)},
+            {"$set": {"judges ": judges}},
+        )
+        return {"message": "Judges successfully added"}, status.HTTP_200_OK
+
+
+@app.route("/scorecard/<scorecard_id>/", methods=["GET"])
 def scorecard(scorecard_id):
     scorecard = db.scorecards.find_one({"_id": ObjectId(scorecard_id)})
     if not scorecard:
-        return "Scorecard not found", status.HTTP_404_NOT_FOUND
+        return {"message": "Scorecard not found"}, status.HTTP_404_NOT_FOUND
 
     return scorecard, status.HTTP_200_OK
 
 
-@app.route("/scorecard/scholarship/<scholarship_id>/")
+@app.route("/scorecard/scholarship/<scholarship_id>/", methods=["GET"])
 def get_scorecards(scholarship_id):
     scorecards = db.scorecards.find({"scholarship_id": scholarship_id})
     if not scorecards:
-        return "No scorecards found for given scholarship", status.HTTP_200_OK
+        return {
+            "message": "No scorecards found for given scholarship"
+        }, status.HTTP_200_OK
     return scorecards, status.HTTP_200_OK
 
 
@@ -259,8 +293,10 @@ def get_notification(user_id):
     if request.method == "GET":
         notifications = db.notifications.find({"user_id": user_id})
         if not notifications:
-            return "User does not have any notifications", status.HTTP_200_OK
-        return notifications
+            return {
+                "message": "User does not have any notifications",
+            }, status.HTTP_200_OK
+        return notifications, status.HTTP_200_OK
     elif request.method == "POST":
         notification = {"user_id": user_id, "data": request.get_data()}
         return {
@@ -269,7 +305,7 @@ def get_notification(user_id):
         }, status.HTTP_200_OK
 
 
-@app.route("/mcdm")
+@app.route("/mcdm/", methods=["GET"])
 def mcdm():
     """
     get /mcdm/schoolarship/<id>/: runs the mcdm algorithm, including querying for all scorecards

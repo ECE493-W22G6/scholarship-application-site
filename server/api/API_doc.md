@@ -6,24 +6,22 @@
 Gets information about the user
 
 Success response:
-- body: {
-    email: string,
-    first_name: string,
-    last_name: string,
-    gender: {"female"|"male"},
-    user_type: {"student"|"organization"|"judge"},
-    grade: int,
-    address: string,
-    phone_number: string,
-    parent_email: string,
-    parent_phone_number: string
-    application_id: string 
-}
+- email: string,
+- first_name: string,
+- last_name: string,
+- gender: {"female"|"male"},
+- user_type: {"student"|"organization"|"judge"},
+- grade: int,
+- address: string,
+- phone_number: string,
+- parent_email: string,
+- parent_phone_number: string
+- application_id: string 
 - code: 200 ok
 
 Failure response:
 - Bad user id
-    - body: User not found
+    - message: User not found
     - code: 404 not found
 
 ### POST `/users/register/`
@@ -45,7 +43,7 @@ form: {
 }
 
 Sucess response:
-- body: "Success"
+- message: "Success"
 - code: 201 created
 
 Fail response:
@@ -63,15 +61,15 @@ form: {
 }
 
 Success response:
-- body: "Login successful"
+- message: "Login successful"
 - code: 200 Ok
 
 Failure response:
 - Bad email
-    - body: User with given email not found
+    - message: User with given email not found
     - code: 404 not found
 - Bad password
-    - body: Password is incorrect
+    - message: Password is incorrect
     - code: 401 unauthorized
 
 ### POST `/user/<user_id>/password`
@@ -84,15 +82,15 @@ form: {
 }
 
 Success response:
-- body: "Passwordd changed successfully"
+- message: "Passwordd changed successfully"
 - code: 200 ok
 
 Failure response:
 - Bad email:
-    - body: User with given email not found
+    - message: User with given email not found
     - code: 404 not found
 - Bad current password;
-    - body: Current password is incorrect
+    - message: Current password is incorrect
     - code: 401 unauthorized
 
 ### POST `/user/<user_id>/icon`
@@ -105,14 +103,209 @@ form: {
 }
 
 Success response:
-- body: Icon changed successfully
+- message: Icon changed successfully
 - code: 200 ok
 
 Failure response:
 - Bad email:
-    - body: User with given email not found
+    - message: User with given email not found
     - code: 404 not found
 - Non-organization:
-    - body: User does not have sufficient permission to change icon
+    - message: User does not have sufficient permission to change icon
     - code: 401 unauth
 
+===============================
+
+TODO.
+
+## Applications
+
+### POST `/applications/`
+Submits an application for a scholarship from a user
+**Only permitted for student type accounts**
+
+- Request body:
+data: {
+    user_id: string,
+    scholarship_id: string
+    <student data>
+}
+
+Success response:
+- 
+
+Failure response:
+- Bad user id:
+    - messsage: User does not exist
+    - code: 404 not found
+- Bad user type:
+    - message: User cannot create applications
+    - code: 401 unauthorized
+
+### GET `/applications/`
+Gets all applications in the database
+
+- Request body:
+
+Success response:
+- [<scholarship> ...]
+
+Failure response:
+
+### POST `/application/<application_id>/judge/`
+Creates a new scorecard for the application by the current user
+**Only permitted for judge type accounts**
+
+
+
+===============================
+
+## Scholarships
+
+### GET `/scholarships/`
+Gets all scholarships in the database
+
+Sucess response: 
+- [<scholarship> ...]
+- code: 200 ok
+
+### POST `/scholarships/`
+Creates a new scholarship
+
+Request body:
+- user_id: string
+- <scholarship>
+
+Success response:
+- message: Scholarship successfully created
+- code: 201 created
+
+### POST `/scholarships/`
+Creates a new scholarship
+
+Request body:
+- user_id: string
+- <scholarship>
+
+Success response:
+- message: Scholarship successfully created
+- code: 201 created
+
+Failure response:
+- bad user id:
+    - message: User does not exist
+    - code: 404 not found
+- user not type organization
+    - message: User cannot create scholarships
+    - code: 401 unauthorized
+
+### GET `/scholarships/<scholarship_id>`
+Gets the scholarship with given id
+
+Success response:
+- <scholarship>
+- code: 200 ok
+
+Failure response:
+- scholarship not found:
+    - message: "Scholarship not found"
+    - code: 404 not found
+
+### GET `/scholarships/<scholarship_id>/applications`
+Gets all application ids corresponding to a scholarship
+
+Success response:
+- [<application> ...]
+- code: 200 ok
+
+Failure response:
+- scholarship not found
+    - message: Scholarship not found
+    - code: 404 not found
+
+### GET `/scholarships/<scholarship_id>/judge/`
+Gets all judge user ids for a given scholarship
+
+Success response:
+- [judge_id ...]
+- 200 ok
+
+Failure response:
+- scholarship not found:
+    - message: Scholarship not found
+    - code: 404 not found
+
+### POST `/scholarships/<scholarship_id>/judge/`
+Adds the judges for the given scholarship id
+
+Request body:
+- form: {judge_id ...}
+
+Success response:
+- message: Judges successfully added
+- code: 200 ok
+
+Failure response:
+- scholarship not found:
+    - message: Scholarship not found
+    - code: 404 not found
+
+===============================
+
+## Scorecards
+
+### GET `/scorecard/<scorecard_id>/`
+Gets the specified scorecard with the given id
+
+Successs response:
+- <scorecard>
+- code: 200 ok
+
+Failure response:
+- Scorecard not found
+    - message: Scorecard not found
+    - code: 404 not found
+
+### GET `/scorecard/scholarship/<scholarship_id>/`
+Gathers all scorecards for the given scholarship
+
+Success response:
+- [<scorecard>]
+- code: 200 ok
+
+Failure response: 
+- No scorecards exist for the given scholarship
+    - message: No scorecards found for given scholarship
+
+===============================
+
+## Notifications
+
+### GET `/notifications/user/<user_id>`
+Gets the notifications of the given user
+
+Success response:
+- User has no notifications:
+    - message: User does not have any notifications
+    - code: 200 ok
+- User has notifications:
+    - [<notifications>]
+    - code: 200 ok
+
+### POST `/notifications/user/<user_id>`
+Adds a new notification to the user's inbox
+
+Request body:
+- {<data>}
+
+Success notification:
+- message: Notification successfully added
+- notification_id: notification.inserted_id
+- code: 200 ok
+
+===============================
+
+## MCDM
+
+### GET `/mcdm/`
+To be implemented
