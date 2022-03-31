@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import {Link} from 'react-router-dom';
 import './App.css';
 
-import NotificationsNoneTwoToneIcon from '@mui/icons-material/NotificationsNoneTwoTone';
+import NotificationsNoneTwoToneIcon from
+  '@mui/icons-material/NotificationsNoneTwoTone';
 
 
 const Student = () => {
@@ -27,18 +28,17 @@ const Student = () => {
         <Link to="/scholarshipList">ScholarshipList</Link> | {' '}
         <Link to="/settings">Settings</Link> | {' '}
         <Link to="/notifications">Notifications
-        
+
         </Link>
 
         <NotificationsNoneTwoToneIcon
           component={Link}
           to="/notifications">Notifications
-          
 
 
         </NotificationsNoneTwoToneIcon>
 
-        
+
       </nav>
 
 
