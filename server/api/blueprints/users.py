@@ -1,10 +1,10 @@
-from flask import current_app, Blueprint, request
+from flask import Blueprint, request
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_api import status
 
 from bson.objectid import ObjectId
 
-from api.db import db
+from api.database import db
 
 users = Blueprint("users", __name__, url_prefix="/users")
 

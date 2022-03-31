@@ -2,19 +2,22 @@ import os
 from flask import Flask
 from dotenv import load_dotenv
 
+from api.database import db
+
 load_dotenv()
-MONGO_CLIENT = os.getenv("MONGO_CLIENT")
+MONGO_CLIENT = os.getenv("MONGO_CLIENT_ROOT")
 
 # IMPORTANT: remember to add "/" at the end
 
 
-def create_app(config=None):
+def create_app(mongo_uri=None):
     app = Flask(__name__)
 
-    if config:
-        app.config.from_pyfile(config)
+    if mongo_uri:
+        app.config["MONGO_URI"] = mongo_uri
 
     app.config["MONGO_URI"] = MONGO_CLIENT
+    # db.init_app(app)
 
     from api.blueprints.users import users
     from api.blueprints.applications import applications

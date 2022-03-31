@@ -4,11 +4,8 @@ import unittest
 
 import mongomock
 from unittest.mock import patch
-import api
-from api.api import app
-
-
-app.config["MONGO_URI"] = os.getenv("TEST_CLIENT")
+from api.api import create_app
+from api import database
 
 
 class PyMongoMock(mongomock.MongoClient):
@@ -25,12 +22,8 @@ class TestUserEndpoints(unittest.TestCase):
             "last_name": "squarepants",
             "type": "student",
         }
-        with patch.object(api, "db", PyMongoMock()):
-            # api.db.testDatabase.drop_collection("users")
-            # if "users" in api.db.list_collection_names():
-            #     api.db.get_collection("users").drop()
-
-            test_client = app.test_client()
+        with patch.object(database, "db", PyMongoMock().db):
+            test_client = create_app().test_client()
 
             resp = test_client.post("/users/register/", data=request)
 
@@ -40,15 +33,13 @@ class TestUserEndpoints(unittest.TestCase):
             print(resp_json)
 
             expected_json = {"message": "Success"}
-            self.assertIn(expected_json, resp_json)
+            # self.assertIn(expected_json, resp_json)
 
             # assert new user inserted into db.users
             user_id = resp_json.get("id")
-            stored_obj = api.db.find_one({"_id": mongomock.ObjectId(user_id)})
+            stored_obj = database.db.users.find_one(
+                {"_id": mongomock.ObjectId(user_id)}
+            )
             print(stored_obj)
 
         return
-
-
-# def test_version():
-#     assert __version__ == '0.1.0'

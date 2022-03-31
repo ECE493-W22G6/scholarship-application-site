@@ -17,10 +17,12 @@ To run the server:
 
 This will start a local server at port 5000
 
+## Test instructions
+
+### Running instructions
+To run the tests:
+`poetry run python -m unittest tests/test_server.py`
+
 ## Misc info
 ### Env file
 `.flaskenv`: points to the flask app (api/api.py) and enables flask debug mode (development)
-
-### Dependencies (pyproject.toml)
-- flask
-- python-dotenv

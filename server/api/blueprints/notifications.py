@@ -1,9 +1,7 @@
-from flask import current_app, Blueprint, request
+from flask import Blueprint, request
 from flask_api import status
 
-from bson.objectid import ObjectId
-
-from api.db import db
+from api.database import db
 
 notifications = Blueprint("notifications", __name__, url_prefix="/notifications")
 

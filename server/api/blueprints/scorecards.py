@@ -1,9 +1,9 @@
-from flask import current_app, Blueprint
+from flask import Blueprint
 from flask_api import status
 
 from bson.objectid import ObjectId
 
-from api.db import db
+from api.database import db
 
 scorecards = Blueprint("scorecards", __name__, url_prefix="/scorecards")
 
