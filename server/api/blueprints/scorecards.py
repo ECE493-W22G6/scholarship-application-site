@@ -8,7 +8,7 @@ from api.database import db
 scorecards = Blueprint("scorecards", __name__, url_prefix="/scorecards")
 
 
-@scorecards.route("/scorecard/<scorecard_id>/", methods=["GET"])
+@scorecards.route("/<scorecard_id>/", methods=["GET"])
 def scorecard(scorecard_id):
     scorecard = db.scorecards.find_one({"_id": ObjectId(scorecard_id)})
     if not scorecard:
@@ -17,7 +17,7 @@ def scorecard(scorecard_id):
     return scorecard, status.HTTP_200_OK
 
 
-@scorecards.route("/scorecard/scholarship/<scholarship_id>/", methods=["GET"])
+@scorecards.route("/scholarship/<scholarship_id>/", methods=["GET"])
 def get_scorecards(scholarship_id):
     scorecards = db.scorecards.find({"scholarship_id": scholarship_id})
     if not scorecards:

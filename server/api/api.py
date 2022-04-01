@@ -1,23 +1,16 @@
 import os
 from flask import Flask
 from dotenv import load_dotenv
-
-from api.database import db
+from flask_cors import CORS
 
 load_dotenv()
 MONGO_CLIENT = os.getenv("MONGO_CLIENT_ROOT")
 
-# IMPORTANT: remember to add "/" at the end
 
-
-def create_app(mongo_uri=None):
+def create_app():
     app = Flask(__name__)
 
-    if mongo_uri:
-        app.config["MONGO_URI"] = mongo_uri
-
     app.config["MONGO_URI"] = MONGO_CLIENT
-    # db.init_app(app)
 
     from api.blueprints.users import users
     from api.blueprints.applications import applications
@@ -32,6 +25,9 @@ def create_app(mongo_uri=None):
     app.register_blueprint(notifications)
     app.register_blueprint(scorecards)
     app.register_blueprint(mcdm)
+
+    cors = CORS(app)
+    app.config["CORS_HEADERS"] = "Content-Type"
 
     return app
 
