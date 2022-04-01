@@ -1,0 +1,26 @@
+[
+    {
+        "hexa": "#1D1148",
+        "user": "Student",
+        "description": "Join now and Apply for eligible scholarships",
+        "image": "https://res.cloudinary.com/dhtxsfqry/image/upload/v1648685496/Images%20Capstone/Student_Main_nxlgzz.png"
+    },
+    {
+        "hexa": "#FFCD00",
+        "user": "Organization",
+        "description": "Submit scholarships that students can apply for",
+        "image": "https://res.cloudinary.com/dhtxsfqry/image/upload/v1648685497/Images%20Capstone/Organization_Main_plrzhz.png"
+    },
+    {
+        "hexa": "#FF5041",
+        "user": "Judge",
+        "description": "Score student applications",
+        "image": "https://res.cloudinary.com/dhtxsfqry/image/upload/v1648685497/Images%20Capstone/Judge_Main_tpgcgo.png"
+    },
+    {
+        "hexa": "#000000",
+        "user": "Admin",
+        "description": "Manage users and scholarships on the site",
+        "image": "https://res.cloudinary.com/dhtxsfqry/image/upload/v1648685683/Images%20Capstone/Admin_Main_yqcvt7.png"
+    }
+]
