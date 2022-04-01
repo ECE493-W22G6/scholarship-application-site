@@ -10,6 +10,10 @@ function App() {
         className='App-header'>
         <Link to="/login">Login</Link> | {' '}
         <Link to="/register">Register</Link> | {' '}
+        <Link to="/signIn">Sign In</Link> | {' '}
+        <Link to="/signUp">Sign Up</Link> | {' '}
+        <Link to="/forgotPassword">Forgot Password</Link> | {' '}
+        <Link to="/resetPassword/:pathParam?">Reset Password</Link>
         <Link to="/student">Student</Link> | {' '}
         <Link to="/organization">Organization</Link>
       </nav>
