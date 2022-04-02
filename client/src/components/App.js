@@ -11,7 +11,7 @@ function App() {
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
       />
       <nav className="App-header">
-        <Link to="/login">Login</Link> | <Link to="/register">Register</Link> |{" "}
+        <Link to="/signin">Login</Link> | <Link to="/signup">Register</Link> |{" "}
         <Link to="/student">Student</Link> |{" "}
         <Link to="/organization">Organization</Link>
         <Link to="/user/:id">user page</Link>

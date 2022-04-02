@@ -17,11 +17,12 @@ users = Blueprint("users", __name__, url_prefix="/users")
 
 @users.route("/register/", methods=["POST"])
 def register():
-    email = request.form.get("email")
-    password = request.form.get("password")
-    first_name = request.form.get("first_name")
-    last_name = request.form.get("last_name")
-    user_type = request.form.get("type")  # student, organization, judge
+    form = request.get_json()
+    email = form.get("email")
+    password = form.get("password")
+    first_name = form.get("first_name")
+    last_name = form.get("last_name")
+    user_type = form.get("type")  # student, organization, judge
 
     user = get_user_by_email(email)
 
@@ -49,8 +50,9 @@ def register():
 
 @users.route("/login/", methods=["POST"])
 def login():
-    email = request.form.get("email")
-    password = request.form.get("password")
+    form = request.get_json()
+    email = form.get("email")
+    password = form.get("password")
 
     user = get_user_by_email(email)
 
@@ -68,6 +70,7 @@ def login():
     # success
     return {
         "message": "Login successful",
+        "id": str(user.get("_id")),
     }, status.HTTP_200_OK
 
 
