@@ -1,40 +1,12 @@
-import {
-  Avatar,
-  CircularProgress,
-  Container,
-  GlobalStyles,
-  Grid,
-  Paper,
-  Stack,
-} from "@mui/material";
-// import {Button, Card, Row, Preloader, Col} from 'react-materialize';
+import { Avatar, CircularProgress, Grid, Paper } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import useSWR from "swr";
-// import {Link} from 'react-router-dom';
-import "./App.css";
-import ScholarshipList from "./ScholarshipList";
-import NavBar from "./NavBar";
 
-const Organization = () => {
-  return (
-    <div className="Organization">
-      <GlobalStyles
-        styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
-      />
-      <NavBar />
-      <Container maxWidth="md">
-        <Stack spacing={2}>
-          <Info />
-          <ScholarshipList organization="62463e3ebd256454fbdc71fb" />
-        </Stack>
-      </Container>
-    </div>
-  );
-};
+import { PropTypes } from "@mui/material";
 
-const Info = () => {
-  const userId = localStorage.getItem("userId");
+const UserInfo = ({ userId }) => {
+  // const userId = localStorage.getItem("userId");
   // const {user, isLoading} = useUser('62463e3ebd256454fbdc71fb);
   const { user, isLoading } = useUser(userId);
 
@@ -85,4 +57,4 @@ function useUser(id) {
 
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
-export default Organization;
+export default UserInfo;

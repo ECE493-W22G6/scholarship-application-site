@@ -18,9 +18,8 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import * as React from "react";
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import NavBar from "./NavBar";
-
 
 function Copyright(props) {
   return (
@@ -89,13 +88,13 @@ export default function SignUp() {
   return (
     <ThemeProvider theme={theme}>
       <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={isLoading}
-        >
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
         <CircularProgress color="inherit" />
       </Backdrop>
-      {redirect && <Navigate to="/signin"/>}
-      <NavBar/>
+      {redirect && <Navigate to="/signin" />}
+      <NavBar />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

@@ -41,7 +41,6 @@ export default function SignIn() {
   const [redirect, setRedirect] = React.useState(false);
   const [isLoading, setisLoading] = React.useState(false);
 
-
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -74,14 +73,14 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={theme}>
-      {redirect && <Navigate to="/"/>}
+      {redirect && <Navigate to="/" />}
       <Backdrop
-          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-          open={isLoading}
-        >
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
         <CircularProgress color="inherit" />
       </Backdrop>
-        <NavBar/>
+      <NavBar />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
