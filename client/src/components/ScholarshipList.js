@@ -10,9 +10,7 @@ const ScholarshipList = (props) => {
     >
       {Array.from(Array(6)).map((_, index) => (
         <Grid item xs={2} sm={4} md={4} key={index}>
-          <Paper variant="outlined" elevation={2}>
-            Scholarship
-          </Paper>
+          <Paper variant="outlined">Scholarship</Paper>
         </Grid>
       ))}
     </Grid>

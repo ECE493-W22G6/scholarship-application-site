@@ -99,7 +99,7 @@ const Info = () => {
           theme.palette.mode === "light"
             ? theme.palette.grey[200]
             : theme.palette.grey[700],
-        padding: 5,
+        padding: 3,
       }}
     >
       <Grid container spacing={2} alignItems="flex-end">
