@@ -1,15 +1,11 @@
 import {
-  AppBar,
   Avatar,
   CircularProgress,
   Container,
   GlobalStyles,
   Grid,
-  Link,
   Paper,
   Stack,
-  Toolbar,
-  Typography,
 } from "@mui/material";
 // import {Button, Card, Row, Preloader, Col} from 'react-materialize';
 import axios from "axios";
@@ -18,6 +14,7 @@ import useSWR from "swr";
 // import {Link} from 'react-router-dom';
 import "./App.css";
 import ScholarshipList from "./ScholarshipList";
+import NavBar from "./NavBar";
 
 const Organization = () => {
   return (
@@ -33,47 +30,6 @@ const Organization = () => {
         </Stack>
       </Container>
     </div>
-  );
-};
-
-const NavBar = () => {
-  return (
-    <React.Fragment>
-      <AppBar position="sticky">
-        <Toolbar>
-          {/* content */}
-          <Typography variant="h5" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-            Scholarship Application Site
-          </Typography>
-          <nav align="right">
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/scholarshipList"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              All scholarships
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/notifications"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Notifications
-            </Link>
-            <Link
-              variant="button"
-              color="text.primary"
-              href="/settings"
-              sx={{ my: 1, mx: 1.5 }}
-            >
-              Settings
-            </Link>
-          </nav>
-        </Toolbar>
-      </AppBar>
-    </React.Fragment>
   );
 };
 
