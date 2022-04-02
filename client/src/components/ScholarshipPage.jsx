@@ -8,14 +8,17 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import React from "react";
+import { useParams } from "react-router";
 import useSWR from "swr";
 import NavBar from "./NavBar";
+import PropTypes from "prop-types";
 
-const ScholarshipPage = ({ scholarshipId }) => {
+const ScholarshipPage = () => {
+  const params = useParams();
   return (
     <div className="ScholarshipPage">
       <NavBar />
-      <ScholarshipInfo scholarshipId={scholarshipId} />
+      <ScholarshipInfo scholarshipId={params.scholarshipId} />
     </div>
   );
 };
@@ -43,21 +46,26 @@ const ScholarshipInfo = ({ scholarshipId }) => {
             <Typography variant="h3">{scholarship.name}</Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography variant="h7">Amount: {scholarship.amount}</Typography>
+            <Typography variant="h7">
+              <strong>Amount: </strong>
+              {scholarship.amount}
+            </Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography variant="h7">
-              Number of awards: {scholarship.number_of_awards}
+              <strong>Number of awards: </strong>
+              {scholarship.number_of_awards}
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h7">
-              Ends: {scholarship.end_date || "No end date"}
+              <strong>Ends: </strong>
+              {scholarship.end_date || "No end date"}
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h7">
-              <b>Description:</b> {scholarship.description}
+              <strong>Description:</strong> {scholarship.description}
             </Typography>
           </Grid>
         </Grid>
@@ -67,6 +75,10 @@ const ScholarshipInfo = ({ scholarshipId }) => {
       </Paper>
     </Container>
   );
+};
+
+ScholarshipInfo.propTypes = {
+  scholarshipId: PropTypes.string,
 };
 
 const getScholarshipInfo = (scholarshipId) => {

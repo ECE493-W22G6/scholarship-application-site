@@ -26,7 +26,7 @@ render(
       <Route path="/student" element={<Student />}></Route>
       <Route path="/organization" element={<Organization />}></Route>
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>
-      <Route path="/scholarship/:id" element={<ScholarshipPage scholarshipId={"6248d7666a62d69298a0083c"} />}/>
+      <Route path="/scholarship/:scholarshipId" element={<ScholarshipPage />}/>
       {/* <Route path="/notifications" element={<Notifications/>}></Route> */}
     </Routes>
   </BrowserRouter>,
