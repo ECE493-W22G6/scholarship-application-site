@@ -1,21 +1,60 @@
-# code referenced from https://www.mongodb.com/compatibility/setting-up-flask-with-mongodb
-
 from flask import current_app, g
 from werkzeug.local import LocalProxy
-from flask_pymongo import PyMongo
+from werkzeug.security import generate_password_hash
+from pymongo import MongoClient
+
+from bson.objectid import ObjectId
 
 
 def get_db():
     """
     Configuration method
     """
-    db = getattr(g, "_database", None)
+    if "db" not in g:
+        g.db = MongoClient(current_app.config["MONGO_URI"]).db
 
-    if db is None:
-        db = g._database = PyMongo(current_app).db
-
-    return db
+    return g.db
 
 
-# Use LocalProxy to read the global db instance with just `db`
+# # Use LocalProxy to read the global db instance with just `db`
 db = LocalProxy(get_db)
+
+
+def get_user_by_id(user_id):
+    user = db.users.find_one({"_id": ObjectId(user_id)})
+    if user:
+        return user
+    else:
+        return {}
+
+
+def get_user_by_email(email):
+    user = db.users.find_one({"email": email})
+    if user:
+        return user
+    else:
+        return {}
+
+
+def add_user(user):
+    user = db.users.insert_one(user)
+
+    if user:
+        return str(user.inserted_id)
+    else:
+        return ""
+
+
+def update_user_password(user_id, new_password):
+    resp = db.users.update_one(
+        {"_id": ObjectId(user_id)},
+        {"$set": {"password ": generate_password_hash(new_password, method="sha256")}},
+    )
+    return resp
+
+
+def update_user_icon(user_id, new_icon_url):
+    resp = db.users.update_one(
+        {"_id": ObjectId(user_id)}, {"$set": {"icon": new_icon_url}}
+    )
+    return resp

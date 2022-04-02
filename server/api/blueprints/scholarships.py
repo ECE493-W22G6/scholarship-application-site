@@ -34,7 +34,7 @@ def scholarship():
         return {"message": "Scholarship successfully created"}, status.HTTP_201_CREATED
 
 
-@scholarships.route("/scholarships/<scholarship_id>/", methods=["GET"])
+@scholarships.route("/<scholarship_id>/", methods=["GET"])
 def get_scholarship(scholarship_id):
     scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
     if not scholarship:
@@ -42,7 +42,7 @@ def get_scholarship(scholarship_id):
     return scholarship, status.HTTP_200_OK
 
 
-@scholarships.route("/scholarships/<scholarship_id>/applications/", methods=["GET"])
+@scholarships.route("/<scholarship_id>/applications/", methods=["GET"])
 def get_scholarship_applications(scholarship_id):
     scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
     if not scholarship:
@@ -50,7 +50,7 @@ def get_scholarship_applications(scholarship_id):
     return scholarship.get("applications"), status.HTTP_200_OK
 
 
-@scholarships.route("/scholarships/<scholarship_id>/judge/", methods=["GET", "POST"])
+@scholarships.route("/<scholarship_id>/judge/", methods=["GET", "POST"])
 def judge(scholarship_id):
     if request.method == "GET":
         scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})

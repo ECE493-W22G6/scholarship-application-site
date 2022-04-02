@@ -20,7 +20,7 @@ The page will reload when you make changes. You may also see any lint errors in 
 
 ### `yarn start-api`
 
-Runs the backend api such that front end requests will be sent and processed appropriately. 
+Runs the backend api such that front end requests will be sent and processed appropriately.
 
 ## Adding new dependencies/packages
 

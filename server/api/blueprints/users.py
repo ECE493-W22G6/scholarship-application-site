@@ -4,7 +4,13 @@ from flask_api import status
 
 from bson.objectid import ObjectId
 
-from api.database import db
+from api.database import (
+    add_user,
+    get_user_by_email,
+    get_user_by_id,
+    update_user_icon,
+    update_user_password,
+)
 
 users = Blueprint("users", __name__, url_prefix="/users")
 
@@ -17,11 +23,12 @@ def register():
     last_name = request.form.get("last_name")
     user_type = request.form.get("type")  # student, organization, judge
 
-    user = db.users.find_one({"email": email})
+    user = get_user_by_email(email)
 
     if user:
         return {
             "message": "User already exists",
+            "id": str(user["_id"]),
         }, status.HTTP_409_CONFLICT
 
     new_user = {
@@ -32,11 +39,11 @@ def register():
         "type": user_type,
     }
 
-    user = db.users.insert_one(new_user)
+    new_user_id = add_user(new_user)
 
     return {
         "message": "Success",
-        "id": str(user.inserted_id),
+        "id": str(new_user_id),
     }, status.HTTP_201_CREATED
 
 
@@ -45,7 +52,7 @@ def login():
     email = request.form.get("email")
     password = request.form.get("password")
 
-    user = db.users.find_one({"email": email})
+    user = get_user_by_email(email)
 
     # check if the user actually exists
     # take the user-supplied password, hash it, and compare it to the hashed password in the database
@@ -64,9 +71,9 @@ def login():
     }, status.HTTP_200_OK
 
 
-@users.route("/users/<user_id>/password/", methods=["POST"])
+@users.route("/<user_id>/password/", methods=["POST"])
 def change_password(user_id):
-    user = db.users.find_one({"_id": ObjectId(user_id)})
+    user = get_user_by_id(user_id)
     if not user:
         return {
             "message": "User with given email not found",
@@ -77,20 +84,16 @@ def change_password(user_id):
             "message": "Current password is incorrect",
         }, status.HTTP_401_UNAUTHORIZED
 
-    new_password = request.form.new_password
-    _ = db.users.update_one(
-        {"_id": ObjectId(user_id)},
-        {"$set": {"password ": generate_password_hash(new_password, method="sha256")}},
-    )
+    resp = update_user_password(user_id, request.form.new_password)
 
     return {
         "message": "Password changed successfully",
     }, status.HTTP_200_OK
 
 
-@users.route("/users/<user_id>/icon/", methods=["POST"])
+@users.route("/<user_id>/icon/", methods=["POST"])
 def change_icon(user_id):
-    user = db.users.find_one({"_id": ObjectId(user_id)})
+    user = get_user_by_id(user_id)
     if not user:
         return {
             "message": "User with given email not found",
@@ -100,18 +103,16 @@ def change_icon(user_id):
             "message": "User does not have sufficient permission to change icon",
         }, status.HTTP_401_UNAUTHORIZED
 
-    _ = db.users.update_one(
-        {"_id": ObjectId(user_id)}, {"$set": {"icon": request.form.icon_url}}
-    )
+    resp = update_user_icon(user_id, request.form.icon_url)
 
     return {
         "message": "Icon changed successfully",
     }, status.HTTP_200_OK
 
 
-@users.route("/users/<user_id>/", methods=["GET"])
+@users.route("/<user_id>/", methods=["GET"])
 def get_user(user_id):
-    user = db.users.find_one({"_id": ObjectId(user_id)})
+    user = get_user_by_id(user_id)
     if not user:
         return "User not found", status.HTTP_404_NOT_FOUND
 

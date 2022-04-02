@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 
 export default function Register() {
   return (
-    <main style={{padding: '1rem 0'}}>
+    <main style={{ padding: "1rem 0" }}>
       <h2>Register</h2>
     </main>
   );
