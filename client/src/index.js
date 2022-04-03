@@ -6,6 +6,7 @@ import Organization from "./components/Organization";
 import Student from "./components/Student";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
+import Settings from "./components/Settings";
 import "./index.css";
 
 // code referenced from https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react
@@ -23,6 +24,7 @@ render(
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/student" element={<Student />}></Route>
       <Route path="/organization" element={<Organization />}></Route>
+      <Route path="/settings" element={<Settings />}></Route>
       {/* <Route path="/notifications" element={<Notifications/>}></Route> */}
     </Routes>
   </BrowserRouter>,
