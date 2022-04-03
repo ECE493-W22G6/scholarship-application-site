@@ -13,7 +13,7 @@ const UserInfo = ({ userId }) => {
   if (isLoading) {
     return (
       <div align="center">
-        <CircularProgress active />
+        <CircularProgress />
       </div>
     );
   }
@@ -31,9 +31,11 @@ const UserInfo = ({ userId }) => {
       }}
     >
       <Grid container spacing={2} alignItems="flex-end">
-        <Grid item xs={4}>
-          <Avatar src={user.icon_url} alt={user.first_name} />
-        </Grid>
+        {user.icon_url && (
+          <Grid item xs={4}>
+            <Avatar src={user.icon_url} alt={user.first_name} />
+          </Grid>
+        )}
         <Grid item xs={8}>
           <h1 align="center">{user.first_name}</h1>
         </Grid>

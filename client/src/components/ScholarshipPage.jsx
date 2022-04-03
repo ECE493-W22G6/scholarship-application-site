@@ -19,6 +19,11 @@ const ScholarshipPage = () => {
     <div className="ScholarshipPage">
       <NavBar />
       <ScholarshipInfo scholarshipId={params.scholarshipId} />
+      <Grid item textAlign="right" sx={{ mt: 5 }}>
+        <Button variant="contained" href={`/apply/${params.scholarshipId}`}>
+          Apply
+        </Button>
+      </Grid>
     </div>
   );
 };
@@ -29,7 +34,7 @@ const ScholarshipInfo = ({ scholarshipId }) => {
   if (isLoading) {
     return (
       <div align="center">
-        <CircularProgress active />
+        <CircularProgress />
       </div>
     );
   }
@@ -69,9 +74,6 @@ const ScholarshipInfo = ({ scholarshipId }) => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid item textAlign="right" sx={{ mt: 5 }}>
-          <Button variant="contained">Apply</Button>
-        </Grid>
       </Paper>
     </Container>
   );
@@ -96,8 +98,10 @@ const getScholarshipInfo = (scholarshipId) => {
 
 const fetcher = (url) =>
   axios.get(url).then((res) => {
-    console.log(JSON.stringify(res));
+    // console.log(JSON.stringify(res));
     return res.data;
   });
 
 export default ScholarshipPage;
+
+export { ScholarshipInfo, getScholarshipInfo };

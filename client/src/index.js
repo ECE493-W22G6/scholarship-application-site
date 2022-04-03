@@ -9,6 +9,7 @@ import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import ScholarshipForm from "./components/ScholarshipForm";
 import ScholarshipPage from "./components/ScholarshipPage";
+import ApplyPage from "./components/ApplyPage";
 
 // code referenced from https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react
 // You can choose your kind of history here (e.g. browserHistory)
@@ -27,6 +28,7 @@ render(
       <Route path="/organization/:organizationId" element={<OrganizationPage />}></Route>
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>
       <Route path="/scholarship/:scholarshipId" element={<ScholarshipPage />}/>
+      <Route path="/apply/:scholarshipId" element={<ApplyPage />}/>
       {/* <Route path="/notifications" element={<Notifications/>}></Route> */}
     </Routes>
   </BrowserRouter>,

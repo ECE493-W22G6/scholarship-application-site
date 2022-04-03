@@ -25,6 +25,9 @@ def scholarship():
             }, status.HTTP_401_UNAUTHORIZED
 
         new_scholarship = json.loads(request.get_data().decode("utf-8"))
+        new_scholarship["questions"] = [
+            question.strip() for question in new_scholarship.get("questions").split(";")
+        ]
 
         db.scholarships.insert_one(new_scholarship)
 
