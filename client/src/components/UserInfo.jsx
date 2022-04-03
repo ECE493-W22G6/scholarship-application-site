@@ -1,9 +1,8 @@
 import { Avatar, CircularProgress, Grid, Paper } from "@mui/material";
 import axios from "axios";
+import PropTypes from "prop-types";
 import React from "react";
 import useSWR from "swr";
-
-import { PropTypes } from "@mui/material";
 
 const UserInfo = ({ userId }) => {
   // const userId = localStorage.getItem("userId");
@@ -45,6 +44,10 @@ const UserInfo = ({ userId }) => {
       </Grid>
     </Paper>
   );
+};
+
+UserInfo.propTypes = {
+  userId: PropTypes.string,
 };
 
 function useUser(id) {

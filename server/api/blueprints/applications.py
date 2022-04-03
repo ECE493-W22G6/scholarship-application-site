@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, request
 from flask_api import status
 
@@ -12,7 +13,8 @@ applications = Blueprint("applications", __name__, url_prefix="/applications")
 @applications.route("/", methods=["POST"])
 def submit_application():
     # get user id
-    user_id = request.data.get("user_id")
+    request_data = request.get_json()
+    user_id = request_data.get("user_id")
     user = db.users.find_one({"_id": ObjectId(user_id)})
     if not user:
         return {
@@ -24,27 +26,18 @@ def submit_application():
         }, status.HTTP_401_UNAUTHORIZED
 
     # get scholarship id
-    scholarship_id = request.data.get("scholarship_id")
+    scholarship_id = request_data.get("scholarship_id")
     scholarship = db.scholarships.find_one({"_id": ObjectId(scholarship_id)})
     if not scholarship:
         return {"message": "Scholarship does not exist"}, status.HTTP_404_NOT_FOUND
 
-    new_application = {request.get_data()}
+    new_application = json.loads(request.get_data().decode("utf-8"))
 
     application = db.applications.insert_one(new_application)
     # add application id to scholarship applications
-    db.scholarships.update(
+    db.scholarships.update_one(
         {"_id": ObjectId(scholarship_id)},
-        [
-            {
-                "$set": {
-                    "applications": {
-                        "$concat": ["$applications", str(application.inserted_id)]
-                    }
-                }
-            }
-        ],
-        {"multi": False},
+        {"$push": {"applications": str(application.inserted_id)}},
     )
     return {
         "message": "Application successfully submitted",

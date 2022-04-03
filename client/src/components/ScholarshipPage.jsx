@@ -18,17 +18,15 @@ const ScholarshipPage = () => {
   return (
     <div className="ScholarshipPage">
       <NavBar />
-      <ScholarshipInfo scholarshipId={params.scholarshipId} />
-      <Grid item textAlign="right" sx={{ mt: 5 }}>
-        <Button variant="contained" href={`/apply/${params.scholarshipId}`}>
-          Apply
-        </Button>
-      </Grid>
+      <ScholarshipInfo
+        scholarshipId={params.scholarshipId}
+        buttonState="apply"
+      />
     </div>
   );
 };
 
-const ScholarshipInfo = ({ scholarshipId }) => {
+const ScholarshipInfo = ({ scholarshipId, buttonState }) => {
   const { scholarship, isLoading } = getScholarshipInfo(scholarshipId);
 
   if (isLoading) {
@@ -73,6 +71,14 @@ const ScholarshipInfo = ({ scholarshipId }) => {
               <strong>Description:</strong> {scholarship.description}
             </Typography>
           </Grid>
+
+          {buttonState === "apply" && (
+            <Grid item textAlign="right" sx={{ mt: 5 }}>
+              <Button variant="contained" href={`/apply/${scholarshipId}`}>
+                Apply
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Paper>
     </Container>
