@@ -14,6 +14,7 @@ function App() {
         <Link to="/signin">Login</Link> | <Link to="/signup">Register</Link> |{" "}
         <Link to="/student">Student</Link> |{" "}
         <Link to="/organization">Organization</Link>
+        <Link to="/settings">Settings</Link>
         <Link to="/user/:id">user page</Link>
       </nav>
     </div>
