@@ -45,39 +45,10 @@ def submit_application():
     }, status.HTTP_200_OK
 
 
-@applications.route("/<application_id>", methods=["GET"])
+@applications.route("/<application_id>/", methods=["GET"])
 def get_applications(application_id):
-    application = db.applications.find_one({"_id": ObjectId(application_id)})
-    if not application:
+    application_dict = db.applications.find_one({"_id": ObjectId(application_id)})
+    if not application_dict:
         return {"message": "Application does not exist"}, status.HTTP_404_NOT_FOUNDs
-
-    return application, status.HTTP_200_OK
-
-
-@applications.route("/<application_id>/judge/", methods=["POST"])
-def judge_application(application_id):
-    user_id = request.data.get("user_id")
-    user = db.users.find_one({"_id": ObjectId(user_id)})
-    if not user:
-        return "User does not exist", status.HTTP_404_NOT_FOUND
-    if user.get("type") != "judge":
-        return "User cannot judge applications", status.HTTP_401_UNAUTHORIZED
-
-    application = db.applications.find_one({"_id": ObjectId(application_id)})
-    if not application:
-        return {"message": "Application not found"}, status.HTTP_404_NOT_FOUND
-
-    scholarship_id = application.get("scholarship_id")
-
-    scorecard = {
-        "scholarship_id": scholarship_id,
-        "application_id": application_id,
-        "judge_id": user_id,
-        "score": request.get_data(),
-    }
-    inserted_scorecard = db.scorecards.insert_one(scorecard)
-
-    return {
-        "message": "Scorecard successfully created",
-        "id": str(inserted_scorecard.inserted_id),
-    }, status.HTTP_201_CREATED
+    application_dict["_id"] = str(application_dict["_id"])
+    return application_dict, status.HTTP_200_OK

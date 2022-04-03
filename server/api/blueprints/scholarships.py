@@ -28,6 +28,16 @@ def scholarship():
         new_scholarship["questions"] = [
             question.strip() for question in new_scholarship.get("questions").split(";")
         ]
+        new_scholarship["weightings"] = {
+            criteria: weighting
+            for [criteria, weighting] in [
+                criteriaweighting.split(":")
+                for criteriaweighting in [
+                    pair.strip()
+                    for pair in new_scholarship.get("weightings").split(",")
+                ]
+            ]
+        }
 
         db.scholarships.insert_one(new_scholarship)
 
@@ -71,3 +81,34 @@ def judge(scholarship_id):
             {"$set": {"judges ": judges}},
         )
         return {"message": "Judges successfully added"}, status.HTTP_200_OK
+
+
+@scholarships.route("<scholarship_id>/judge/<application_id>/", methods=["POST"])
+def judge_application(scholarship_id, application_id):
+    request_data = request.get_json()
+    user_id = request_data.get("judge_id")
+    user = db.users.find_one({"_id": ObjectId(user_id)})
+    if not user:
+        return "User does not exist", status.HTTP_404_NOT_FOUND
+    if user.get("type") != "judge":
+        return "User cannot judge applications", status.HTTP_401_UNAUTHORIZED
+
+    application = db.applications.find_one({"_id": ObjectId(application_id)})
+    if not application:
+        return {"message": "Application not found"}, status.HTTP_404_NOT_FOUND
+
+    scholarship_id = scholarship_id
+    if not application:
+        return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
+
+    student_id = request_data.get("student_id")
+    mcdm_input = {}
+    for criteria, score in request_data.get("judge_scores").items():
+        mcdm_input[f"{student_id}.{criteria}"] = int(score)
+    scorecard_dict = request_data | mcdm_input
+    inserted_scorecard = db.scorecards.insert_one(scorecard_dict)
+
+    return {
+        "message": "Scorecard successfully created",
+        "id": str(inserted_scorecard.inserted_id),
+    }, status.HTTP_201_CREATED

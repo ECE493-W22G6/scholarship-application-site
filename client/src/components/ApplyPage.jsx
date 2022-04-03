@@ -69,7 +69,7 @@ const ApplyPage = () => {
 
   return (
     <div className="ApplyPage">
-      {redirect && <Navigate to={`/scholarship/${params.scholarshipId}`} />}
+      {redirect && <Navigate to={`/scholarships/${params.scholarshipId}`} />}
       <NavBar />
       <Container maxWidth="md">
         <Card elevation={3} sx={{ mb: 5 }}>
@@ -183,7 +183,7 @@ const ApplyPage = () => {
                     id={`question${index}`}
                     name={`question${index}`}
                     fullWidth
-                    sx={{ mt: 1 }}
+                    sx={{ mt: 1, mb: 1 }}
                   />
                 </Grid>
               ))}

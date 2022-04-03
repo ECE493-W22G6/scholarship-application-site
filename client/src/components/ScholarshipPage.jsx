@@ -39,7 +39,7 @@ const ScholarshipInfo = ({ scholarshipId, buttonState }) => {
 
   return (
     <Container component="main" maxWidth="md">
-      <Paper variant="outlined" sx={{ my: { xs: 3 }, p: { xs: 2 } }}>
+      <Paper variant="outlined" sx={{ my: { xs: 2 }, p: { xs: 2 } }}>
         <Typography variant="h5" gutterBottom>
           Scholarship Information
         </Typography>
