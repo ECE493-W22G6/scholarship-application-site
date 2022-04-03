@@ -1,3 +1,4 @@
+import json
 from flask import Blueprint, request
 from flask_api import status
 
@@ -13,7 +14,8 @@ def scholarship():
     if request.method == "GET":
         return db.scholarships.find({}), status.HTTP_200_OK
     elif request.method == "POST":
-        user_id = request.data.get("user_id")
+        request_data = request.get_json()
+        user_id = request_data.get("organization_id")
         user = db.users.find_one({"_id": ObjectId(user_id)})
         if not user:
             return {"message": "User does not exist"}, status.HTTP_404_NOT_FOUND
@@ -22,12 +24,7 @@ def scholarship():
                 "message": "User cannot create scholarships"
             }, status.HTTP_401_UNAUTHORIZED
 
-        # name = request.form.get("name")
-        # fields = request.form.get("fields")
-        # criteria = request.form.get("criteria")
-        # new_scholarship = {"name": name, "fields": fields, "criteria": criteria}
-
-        new_scholarship = request.get_data()
+        new_scholarship = json.loads(request.get_data().decode("utf-8"))
 
         db.scholarships.insert_one(new_scholarship)
 
@@ -36,10 +33,11 @@ def scholarship():
 
 @scholarships.route("/<scholarship_id>/", methods=["GET"])
 def get_scholarship(scholarship_id):
-    scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
-    if not scholarship:
+    scholarship_dict = db.scholarships.find_one({"_id": ObjectId(scholarship_id)})
+    if not scholarship_dict:
         return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
-    return scholarship, status.HTTP_200_OK
+    scholarship_dict["_id"] = str(scholarship_dict["_id"])
+    return scholarship_dict, status.HTTP_200_OK
 
 
 @scholarships.route("/<scholarship_id>/applications/", methods=["GET"])

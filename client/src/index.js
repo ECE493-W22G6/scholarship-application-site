@@ -4,7 +4,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./components/App";
 import Student from "./components/Student";
 import "./index.css";
-import Organization from "./components/Organization";
+import OrganizationPage from "./components/OrganizationPage";
 import SignUp from "./components/SignUp";
 import SignIn from "./components/SignIn";
 import ScholarshipForm from "./components/ScholarshipForm";
@@ -24,7 +24,7 @@ render(
       <Route path="/signin" element={<SignIn />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/student" element={<Student />}></Route>
-      <Route path="/organization" element={<Organization />}></Route>
+      <Route path="/organization/:organizationId" element={<OrganizationPage />}></Route>
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>
       <Route path="/scholarship/:scholarshipId" element={<ScholarshipPage />}/>
       {/* <Route path="/notifications" element={<Notifications/>}></Route> */}

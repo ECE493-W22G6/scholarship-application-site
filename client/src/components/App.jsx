@@ -18,7 +18,9 @@ function App() {
             Welcome to Scholarship Application Site
           </Typography>
           <nav className="App-header">
-            <Link href="/organization">Organization</Link>
+            <Link href="/organization/62463e3ebd256454fbdc71fb">
+              OrganizationPage
+            </Link>
             <Link href="/submitscholarship">Submit a scholarship</Link>
 
             {/* <Link href="/student">Student</Link> */}
