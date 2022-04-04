@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
-import "./App.css";
+import { Card, Container, Typography } from "@mui/material";
 import React from "react";
-import { Container, Typography, Link, Box } from "@mui/material";
+import "./App.css";
 import NavBar from "./NavBar";
 
 function App() {
@@ -9,23 +9,20 @@ function App() {
     <div>
       <NavBar />
       <Container maxWidth="sm" className="App" alignItems="center">
-        <Box sx={{ my: 4 }}>
+        <Card sx={{ my: 4, p: 2 }} variant="outlined" alignItems="center">
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
-          <Typography variant="h4" component="h1" gutterBottom>
+          <Typography
+            variant="h4"
+            component="h1"
+            gutterBottom
+            alignItems="center"
+          >
             Welcome to Scholarship Application Site
           </Typography>
-          <nav className="App-header">
-            <Link href="/organization/62463e3ebd256454fbdc71fb">
-              OrganizationPage
-            </Link>
-            <Link href="/submitscholarship">Submit a scholarship</Link>
-
-            {/* <Link href="/student">Student</Link> */}
-          </nav>
-        </Box>
+        </Card>
       </Container>
     </div>
   );

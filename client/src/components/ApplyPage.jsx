@@ -1,4 +1,5 @@
 import {
+  Backdrop,
   Button,
   Card,
   CircularProgress,
@@ -22,6 +23,7 @@ const ApplyPage = () => {
   const { scholarship, isLoading } = getScholarshipInfo(params.scholarshipId);
   const [grade, setGrade] = useState(6);
   const [redirect, setRedirect] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -52,7 +54,7 @@ const ApplyPage = () => {
     if (!(firstName && lastName && email && school)) {
       return;
     }
-    // setisLoading(true);
+    setSubmitting(true);
     axios
       .post("/api/applications/", application)
       .then((resp) => {
@@ -69,6 +71,12 @@ const ApplyPage = () => {
 
   return (
     <div className="ApplyPage">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={submitting}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {redirect && <Navigate to={`/scholarships/${params.scholarshipId}`} />}
       <NavBar />
       <Container maxWidth="md">
@@ -199,5 +207,117 @@ const ApplyPage = () => {
     </div>
   );
 };
+
+// const NewApplication = () => {
+//   return (
+//     <Grid container maxWidth="md" spacing={2}>
+//       <Grid item xs={12} sm={6}>
+//         <TextField
+//           autoComplete="given-name"
+//           name="firstName"
+//           required
+//           fullWidth
+//           id="firstName"
+//           label="First Name"
+//           autoFocus
+//         />
+//       </Grid>
+//       <Grid item xs={12} sm={6}>
+//         <TextField
+//           required
+//           fullWidth
+//           id="lastName"
+//           label="Last Name"
+//           name="lastName"
+//           autoComplete="family-name"
+//         />
+//       </Grid>
+//       <Grid item xs={12} sm={6}>
+//         <TextField
+//           required
+//           fullWidth
+//           id="email"
+//           label="Email Address"
+//           name="email"
+//           autoComplete="email"
+//         />
+//       </Grid>
+//       <Grid item xs={12} sm={6}>
+//         <TextField
+//           fullWidth
+//           id="phone"
+//           label="Phone number"
+//           name="phone"
+//           autoComplete="phone"
+//         />
+//       </Grid>
+//       <Grid item xs={12}>
+//         <TextField
+//           required
+//           id="address1"
+//           name="address1"
+//           label="Address line 1"
+//           fullWidth
+//           autoComplete="shipping address-line1"
+//         />
+//       </Grid>
+//       <Grid item xs={12}>
+//         <TextField
+//           id="address2"
+//           name="address2"
+//           label="Address line 2"
+//           fullWidth
+//           autoComplete="shipping address-line2"
+//         />
+//       </Grid>
+//       <Grid item xs={6}>
+//         <FormControl fullWidth>
+//           <InputLabel id="demo-simple-select-label">Grade</InputLabel>
+//           <Select
+//             labelId="demo-simple-select-label"
+//             id="demo-simple-select"
+//             value={grade}
+//             label="Grade"
+//             onChange={(e) => setGrade(e.target.value)}
+//           >
+//             <MenuItem value={6}>6</MenuItem>
+//             <MenuItem value={7}>7</MenuItem>
+//             <MenuItem value={8}>8</MenuItem>
+//             <MenuItem value={9}>9</MenuItem>
+//             <MenuItem value={10}>10</MenuItem>
+//             <MenuItem value={11}>11</MenuItem>
+//             <MenuItem value={12}>12</MenuItem>
+//           </Select>
+//         </FormControl>
+//       </Grid>
+//       <Grid item xs={6}>
+//         <TextField id="school" name="school" label="School" fullWidth />
+//       </Grid>
+//       <Grid sx={{ m: 1 }} />
+//       <Grid item xs={12}>
+//         <Typography variant="h6">Questions</Typography>
+//       </Grid>
+//       {isLoading && <CircularProgress sx={{ mt: 2, mb: 2, align: "center" }} />}
+//       {scholarship &&
+//         scholarship.questions.map((question, index) => (
+//           <Grid item xs={12} key={`question${index}`}>
+//             {question}
+//             <TextField
+//               multiline
+//               id={`question${index}`}
+//               name={`question${index}`}
+//               fullWidth
+//               sx={{ mt: 1, mb: 1 }}
+//             />
+//           </Grid>
+//         ))}
+//       <Grid item xs={12} sx={{ mt: 3 }}>
+//         <Button type="submit" variant="contained">
+//           Submit
+//         </Button>
+//       </Grid>
+//     </Grid>
+//   );
+// };
 
 export default ApplyPage;

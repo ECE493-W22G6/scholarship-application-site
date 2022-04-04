@@ -1,5 +1,5 @@
 import json
-from flask import Blueprint, request
+from flask import Blueprint, jsonify, request
 from flask_api import status
 
 from bson.objectid import ObjectId
@@ -12,7 +12,17 @@ scholarships = Blueprint("scholarships", __name__, url_prefix="/scholarships")
 @scholarships.route("/", methods=["GET", "POST"])
 def scholarship():
     if request.method == "GET":
-        return db.scholarships.find({}), status.HTTP_200_OK
+        if request.args and request.args.get("organization_id"):
+            res = list(
+                db.scholarships.find(
+                    {"organization_id": request.args.get("organization_id")}
+                )
+            )
+        else:
+            res = list(db.scholarships.find())
+        for s in res:
+            s["_id"] = str(s["_id"])
+        return jsonify({"result": res}), status.HTTP_200_OK
     elif request.method == "POST":
         request_data = request.get_json()
         user_id = request_data.get("organization_id")
@@ -38,6 +48,7 @@ def scholarship():
                 ]
             ]
         }
+        new_scholarship["organization_name"] = user.firstname
 
         db.scholarships.insert_one(new_scholarship)
 

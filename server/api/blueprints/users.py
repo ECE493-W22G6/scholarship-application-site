@@ -44,6 +44,7 @@ def register():
 
     return {
         "message": "Success",
+        "type": user_type,
         "id": str(new_user_id),
     }, status.HTTP_201_CREATED
 
@@ -70,6 +71,7 @@ def login():
     # success
     return {
         "message": "Login successful",
+        "type": user.get("type"),
         "id": str(user.get("_id")),
     }, status.HTTP_200_OK
 
@@ -81,13 +83,14 @@ def change_password(user_id):
         return {
             "message": "User with given email not found",
         }, status.HTTP_404_NOT_FOUND
-    current_password = request.form.current_password
-    if not check_password_hash(user["password"], current_password):
+    form = request.get_json()
+    old_password = form.get("old_password")
+    if not check_password_hash(user["password"], old_password):
         return {
             "message": "Current password is incorrect",
         }, status.HTTP_401_UNAUTHORIZED
 
-    resp = update_user_password(user_id, request.form.new_password)
+    resp = update_user_password(user_id, form.get("new_password"))
 
     return {
         "message": "Password changed successfully",
@@ -106,7 +109,7 @@ def change_icon(user_id):
             "message": "User does not have sufficient permission to change icon",
         }, status.HTTP_401_UNAUTHORIZED
 
-    resp = update_user_icon(user_id, request.form.icon_url)
+    resp = update_user_icon(user_id, request.get_json().get("new_icon_url"))
 
     return {
         "message": "Icon changed successfully",

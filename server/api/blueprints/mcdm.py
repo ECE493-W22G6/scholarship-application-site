@@ -1,6 +1,10 @@
 from flask import Blueprint, request
 from flask_api import status
 
+from api.database import (
+    get_scorecard
+)
+
 class algorithm:
 
     def __init__(self,inp):
@@ -60,34 +64,31 @@ def run_mcdm():
 
 
     """
-    form = request.get_json()
-    student_id = form.get("student_id")
-    aplication_id = form.get("application_id")
-    judge_id = form.get("judge_id")
-    scholarship_id = form.get("scholarship_id")
-    judge_score = form.get("judge_score")
-    weight_criteria = form.get("weight_criteria")
 
-    bestStudent = algorithm(('base', student_id))
-    
+    form = request.get_json()
+    _id = form.get("_id")
+
+    bestStudent = algorithm(('base', _id))
+    user_id = get_scorecard(_id)
+
     studentDict = {
     ('base','acedemic'):1,
     ('base','leadership'):1,
     ('base','volunteer'):1,
-    (student_id,'acedemic'):judge_score['academic'],
-    (student_id,'leadership'):judge_score['leadership'],
-    (student_id,'volunteer'):judge_score['volunteer']
+    (_id,'acedemic'):user_id['judge_scores']['academic'],
+    (_id,'leadership'):user_id['judge_scores']['leadership'],
+    (_id,'volunteer'):user_id['judge_scores']['volunteer']
     }
     bestStudent.setDictionary(studentDict)
-    bestStudent.set_weight({'acedemic':weight_criteria['academic'],'leadership':weight_criteria['leadership'],
-    'volunteer':weight_criteria['volunteer']}, 'Grade')
+    bestStudent.set_weight({'acedemic':user_id['weight_criteria']['academic'],'leadership':user_id['weight_criteria']['leadership'],
+    'volunteer':user_id['weight_criteria']['volunteer']}, 'Grade')
     
-    student_total_score = bestStudent.get_calculation(student_id, 'Grade')
+    student_total_score = bestStudent.get_calculation(_id, 'Grade')
 
 
     # success
     return {
         "message": "Calculations successful",
-        "Student_id": student_id,
+        "_id": _id,
         "student_total_score" : student_total_score
     }, status.HTTP_200_OK

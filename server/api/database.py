@@ -48,13 +48,21 @@ def add_user(user):
 def update_user_password(user_id, new_password):
     resp = db.users.update_one(
         {"_id": ObjectId(user_id)},
-        {"$set": {"password ": generate_password_hash(new_password, method="sha256")}},
+        {"$set": {"password": generate_password_hash(new_password, method="sha256")}},
     )
     return resp
 
 
 def update_user_icon(user_id, new_icon_url):
     resp = db.users.update_one(
-        {"_id": ObjectId(user_id)}, {"$set": {"icon": new_icon_url}}
+        {"_id": ObjectId(user_id)}, {"$set": {"icon_url": new_icon_url}}
     )
     return resp
+
+
+def get_scorecard(user_id):
+    user = db.scorecards.find_one({"_id": ObjectId(user_id)})
+    if user:
+        return user
+    else:
+        return {}

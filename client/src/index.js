@@ -1,16 +1,19 @@
 import React from "react";
 import { render } from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AllScholarshipsPage from "./components/AllScholarshipsPage";
 import App from "./components/App";
-import Student from "./components/Student";
-import "./index.css";
-import OrganizationPage from "./components/OrganizationPage";
-import SignUp from "./components/SignUp";
-import SignIn from "./components/SignIn";
-import ScholarshipForm from "./components/ScholarshipForm";
-import ScholarshipPage from "./components/ScholarshipPage";
 import ApplyPage from "./components/ApplyPage";
 import JudgePage from "./components/JudgePage";
+import OrganizationPage from "./components/OrganizationPage";
+import ScholarshipForm from "./components/ScholarshipForm";
+import ScholarshipPage from "./components/ScholarshipPage";
+import SettingsPage from "./components/SettingsPage";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import "./index.css";
+import ProfilePage from "./ProfilePage";
+
 
 // code referenced from https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react
 // You can choose your kind of history here (e.g. browserHistory)
@@ -25,12 +28,15 @@ render(
       <Route path="/" element={<App />}></Route>
       <Route path="/signin" element={<SignIn />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
-      <Route path="/student" element={<Student />}></Route>
-      <Route path="/organization/:organizationId" element={<OrganizationPage />}></Route>
+      <Route path="/settings" element={<SettingsPage />}></Route>
+      <Route path="/profile" element={<ProfilePage />}></Route>
+      <Route path="/organizations/:organizationId" element={<OrganizationPage />}></Route>
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>
       <Route path="/scholarships/:scholarshipId" element={<ScholarshipPage />}/>
       <Route path="/scholarships/:scholarshipId/apply" element={<ApplyPage />}/>
       <Route path="/scholarships/:scholarshipId/judge/:applicationId" element={<JudgePage />}/>
+      <Route path="/scholarships/" element={<AllScholarshipsPage />}/>
+
       {/* <Route path="/notifications" element={<Notifications/>}></Route> */}
     </Routes>
   </BrowserRouter>,

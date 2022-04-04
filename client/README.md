@@ -2,7 +2,7 @@
 
 This app is built with react-swr as the front end, and flask as the back end.
 
-Dependency management is via `yarn` (not npm)
+Dependency management is via `yarn` (not npm) for the front end and `poetry` for the backend.
 
 ## Running instructions
 
@@ -18,7 +18,7 @@ Runs the app in the development mode. Open [http://localhost:3000](http://localh
 
 The page will reload when you make changes. You may also see any lint errors in the console.
 
-### `yarn start-api`
+### `cd ../server && poetry install && poetry run flask run`
 
 Runs the backend api such that front end requests will be sent and processed appropriately.
 

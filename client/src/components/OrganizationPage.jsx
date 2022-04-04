@@ -18,7 +18,7 @@ const OrganizationPage = () => {
       <Container maxWidth="md">
         <Stack spacing={2}>
           <UserInfo userId={params.organizationId} />
-          <ScholarshipList organization={params.organizationId} />
+          <ScholarshipList organizationId={params.organizationId} />
         </Stack>
       </Container>
     </div>
