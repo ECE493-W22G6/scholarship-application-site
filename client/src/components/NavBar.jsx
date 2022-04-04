@@ -14,18 +14,21 @@ const NavBar = () => {
             <Link
               variant="button"
               color="text.primary"
-              href="/scholarshipList"
+              href="/scholarships"
               sx={{ my: 1, mx: 1.5 }}
             >
               All scholarships
             </Link>
-            <Link
+            {/* <Link
               variant="button"
               color="text.primary"
               href="/notifications"
               sx={{ my: 1, mx: 1.5 }}
             >
               Notifications
+            </Link> */}
+            <Link variant="button" color="text.primary" href="/profile">
+              Profile
             </Link>
             <Link
               variant="button"

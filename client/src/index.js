@@ -28,7 +28,7 @@ render(
       <Route path="/signin" element={<SignIn />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/profile" element={<ProfilePage />}></Route>
-      <Route path="/organization/:organizationId" element={<OrganizationPage />}></Route>
+      <Route path="/organizations/:organizationId" element={<OrganizationPage />}></Route>
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>
       <Route path="/scholarships/:scholarshipId" element={<ScholarshipPage />}/>
       <Route path="/scholarships/:scholarshipId/apply" element={<ApplyPage />}/>

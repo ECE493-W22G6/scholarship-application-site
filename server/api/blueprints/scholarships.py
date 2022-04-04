@@ -12,10 +12,16 @@ scholarships = Blueprint("scholarships", __name__, url_prefix="/scholarships")
 @scholarships.route("/", methods=["GET", "POST"])
 def scholarship():
     if request.method == "GET":
-        res = list(db.scholarships.find())
+        if request.args and request.args.get("organization_id"):
+            res = list(
+                db.scholarships.find(
+                    {"organization_id": request.args.get("organization_id")}
+                )
+            )
+        else:
+            res = list(db.scholarships.find())
         for s in res:
             s["_id"] = str(s["_id"])
-        print(res)
         return jsonify({"result": res}), status.HTTP_200_OK
     elif request.method == "POST":
         request_data = request.get_json()

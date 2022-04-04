@@ -25,12 +25,9 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
+        Template code from mui.
+      </Link>
     </Typography>
   );
 }
@@ -62,6 +59,7 @@ export default function SignIn() {
           if (resp.status === 200) {
             console.log("Login successful");
             localStorage.setItem("userId", resp.data.id);
+            localStorage.setItem("userType", resp.data.type);
             setRedirect(true);
           }
         })

@@ -1,4 +1,3 @@
-import { Container } from "@mui/material";
 import React from "react";
 import NavBar from "./NavBar";
 import ScholarshipList from "./ScholarshipList";
