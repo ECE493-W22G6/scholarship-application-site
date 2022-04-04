@@ -29,7 +29,6 @@ render(
       <Route path="/" element={<App />}></Route>
       <Route path="/signin" element={<SignIn />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
-      <Route path="/student" element={<Student />}></Route>
       <Route path="/settings" element={<Settings />}></Route>
       <Route path="/profile" element={<ProfilePage />}></Route>
       <Route path="/organizations/:organizationId" element={<OrganizationPage />}></Route>
