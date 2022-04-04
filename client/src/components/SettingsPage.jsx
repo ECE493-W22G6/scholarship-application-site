@@ -1,174 +1,210 @@
-import {
-  Avatar,
-  Button,
-  Card,
-  CircularProgress,
-  Container,
-  Grid,
-  TextField,
-} from "@mui/material";
-import Typography from "@mui/material/Typography";
-import { withStyles } from "@mui/styles";
-import axios from "axios";
-import React from "react";
-import NavBar from "./NavBar";
-import { useUser } from "./UserInfo";
+import React from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@mui/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Drawer from '@mui/material/Drawer';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import Logout from '@mui/icons-material/Logout';
+// import { mainListItems, secondaryListItems } from './ListSettings';
+
+import ListItem from '@mui/material/ListItem';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import ListSubheader from '@mui/material/ListSubheader';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import Password from '@mui/icons-material/Password';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+
+// import ChangeProfile from './ChangeProfileDEPRACATED';
+import ChangePassword from './ChangePassword';
+import UploadImages from './ChangeProfile';
 
 const styles = {
-  root: {
-    display: "flex",
-  },
-  menuButton: {
-    marginLeft: 12,
-    marginRight: 36,
-  },
-  menuButtonHidden: {
-    display: "none",
-  },
-  toolbar: {
-    paddingRight: 24,
-  },
-  toolbarIcon: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
-  },
-  appBarShift: {
-    marginLeft: 240,
-    width: `calc(100% - 240px)`,
-  },
-  content: {
-    flexGrow: 1,
-    overflow: "auto",
-    height: "100vh",
-  },
-  drawerPaper: {
-    position: "relative",
-    whiteSpace: "nowrap",
-    width: 240,
-  },
-  drawerPaperClose: {
-    overflowX: "hidden",
-  },
+    root: {
+        display: 'flex',
+    },
+    menuButton: {
+        marginLeft: 12,
+        marginRight: 36,
+    },
+    menuButtonHidden: {
+        display: 'none',
+    },
+    toolbar: {
+        paddingRight: 24,
+    },
+    toolbarIcon: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'flex-end',
+        padding: '0 8px',
+    },
+    appBarShift: {
+        marginLeft: 240,
+        width: `calc(100% - 240px)`,
+    },
+    content: {
+        flexGrow: 1,
+        overflow: 'auto',
+        height: '100vh',
+    },
+    drawerPaper: {
+        position: 'relative',
+        whiteSpace: 'nowrap',
+        width: 240,
+    },
+    drawerPaperClose: {
+        overflowX: 'hidden',
+    },
 };
 
-const SettingsPage = () => {
-  const userType = localStorage.getItem("userType");
-  const userId = localStorage.getItem("userId");
-  const { user, isLoading } = useUser(userId);
-
-  const handleChangePassword = (event) => {
-    const data = new FormData(event.currentTarget);
-    const oldPassword = data.get("old-password");
-    const newPassword = data.get("new-password");
-    const requestBody = {
-      old_password: oldPassword,
-      new_password: newPassword,
+class SettingsPage extends React.PureComponent {
+    state = {
+        open: true,
+        showListItem: 1,
+        currentFile: undefined,
+        previewImage: undefined,
+        isError: false,
+        imageInfos: [],
     };
 
-    console.log(requestBody);
+    render() {
+        const openDrawer = (boolean) => {
+            this.setState({
+                ...this.state,
+                open: boolean
+            }, console.log(this.state));
+        };
 
-    axios.post(`/api/users/${userId}/password/`, requestBody).then((resp) => {
-      console.log(`recv'd resp: ${JSON.stringify(resp)}`);
-      if (resp.status === 200) {
-        console.log("Password changed successfully");
-      }
-    });
-  };
+        const showListItem = async (integer) => {
+            await this.setState({
+                ...this.state,
+                showListItem: integer
+            });
+            console.log(this.state)
+            // this.forceUpdate()
+        };
 
-  const handleIconChange = (event) => {
-    const data = new FormData(event.currentTarget);
-    const newIconUrl = data.get("new-icon-url");
-    const requestBody = {
-      new_icon_url: newIconUrl,
-    };
+        const selectFile = (event1) => {
+            this.setState({
+                ...this.state,
+                currentFile: event1.target.files[0],
+                previewImage: URL.createObjectURL(event1.target.files[0]),
+                progress: 0,
+                message: ""
+            });
+        }
 
-    axios.post(`/api/users/${userId}/icon/`, requestBody).then((resp) => {
-      console.log(`recv'd resp: ${JSON.stringify(resp)}`);
-      if (resp.status === 200) {
-        console.log("Password changed successfully");
-      }
-    });
-  };
+        const { classes } = this.props;
 
-  return (
-    <div className="SettingsPage">
-      <NavBar />
-      <Container maxWidth="md">
-        <Grid container spacing={2} sx={{ p: 2 }} justifyContent="flex-end">
-          <Grid item xs={12} component="form" onSubmit={handleChangePassword}>
-            <Card variant="outlined" sx={{ p: 2 }}>
-              <Typography variant="h5">Change password</Typography>
-              <hr />
-              <Grid item sx={{ m: 2 }}>
-                <TextField
-                  required
-                  fullWidth
-                  name="old-password"
-                  id="old-password"
-                  label="Old password"
-                  autoComplete="password"
-                  type="password"
-                />
-              </Grid>
-              <Grid item sx={{ m: 2 }}>
-                <TextField
-                  required
-                  fullWidth
-                  name="new-password"
-                  id="new-password"
-                  label="New password"
-                  autoComplete="password"
-                  type="password"
-                />
-              </Grid>
-              <div align="center">
-                <Button type="submit" variant="contained" sx={{ mt: 3, mb: 2 }}>
-                  Submit
-                </Button>
-              </div>
-            </Card>
-          </Grid>
-          {userType === "organization" && (
-            <Grid item xs={12} component="form" onSubmit={handleIconChange}>
-              <Card variant="outlined" sx={{ p: 2 }}>
-                <Typography variant="h5">Change icon</Typography>
-                <hr />
-                {isLoading && (
-                  <div align="center">
-                    <CircularProgress />
-                  </div>
-                )}
-                {user && (
-                  <Grid item sx={{ m: 2 }}>
-                    <Avatar src={user.icon_url} />
-                    <TextField
-                      required
-                      fullWidth
-                      name="new-icon-url"
-                      id="new-icon-url"
-                      label="New icon url"
-                      sx={{ mt: 2 }}
-                    />
-                    <div align="center">
-                      <Button
-                        type="submit"
-                        variant="contained"
-                        sx={{ mt: 3, mb: 2 }}
-                      >
-                        Submit
-                      </Button>
+        return (
+            <div className={classes.root}>
+                <CssBaseline />
+                <AppBar
+                    position="absolute"
+                >
+                    <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
+                        <IconButton
+                            color="inherit"
+                            aria-label="Open drawer"
+                            onClick={() => openDrawer(true)}
+                        >
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography
+                            component="h1"
+                            variant="h6"
+                            color="inherit"
+                            noWrap
+                            className={classes.title}
+                        >
+                            Dashboard
+                        </Typography>
+                        <IconButton color="inherit">
+                            <Badge color="secondary">
+                                <Logout
+                                    onClick={() => {
+                                        localStorage.clear()
+                                        // Redirect to login
+                                        window.location.href = '/signin'
+                                    }
+                                    }
+                                />
+                            </Badge>
+                        </IconButton>
+                    </Toolbar>
+                </AppBar>
+                <Drawer
+                    variant="permanent"
+                    open={this.state.open}
+                >
+                    <div className={classes.toolbarIcon}>
+                        <IconButton onClick={() => openDrawer(false)}>
+                            <ChevronLeftIcon />
+                        </IconButton>
                     </div>
-                  </Grid>
-                )}
-              </Card>
-            </Grid>
-          )}
-        </Grid>
-      </Container>
-    </div>
-  );
+                    <Divider />
+                    <List>
+                        <div>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <AccountCircle />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="Change Profile"
+                                    onClick={(event) => {
+                                        showListItem(1)
+                                    }}
+                                />
+                            </ListItem>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <Password />
+                                </ListItemIcon>
+                                <ListItemText
+                                    primary="Change Password"
+                                    onClick={(event) => {
+                                        showListItem(2)
+                                    }}
+                                />
+                            </ListItem>
+                        </div>
+                    </List>
+                    <Divider />
+                    <List>
+                        <div>
+                            <ListSubheader inset>Others</ListSubheader>
+                            <ListItem button>
+                                <ListItemIcon>
+                                    <AssignmentIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Other Information" />
+                            </ListItem>
+                        </div>
+                    </List>
+                </Drawer>
+                <main className={classes.content}>
+                    <div className={classes.appBarSpacer} />
+                    <div className={classes.tableContainer}>
+                        {this.state.showListItem === 1 && <UploadImages />}
+                        {this.state.showListItem === 2 && <ChangePassword />}
+                    </div>
+                </main>
+            </div>
+        );
+    }
+}
+
+SettingsPage.propTypes = {
+    classes: PropTypes.object.isRequired,
 };
 
 export default withStyles(styles)(SettingsPage);

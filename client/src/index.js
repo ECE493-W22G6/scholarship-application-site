@@ -6,7 +6,7 @@ import AllScholarshipsPage from "./components/AllScholarshipsPage";
 import App from "./components/App";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import Settings from "./components/Settings";
+import SettingsPage from "./components/SettingsPage";
 import ProfilePage from "./ProfilePage";
 import OrganizationPage from "./components/OrganizationPage";
 import ScholarshipForm from "./components/ScholarshipForm";
@@ -30,11 +30,7 @@ render(
       <Route path="/" element={<App />}></Route>
       <Route path="/signin" element={<SignIn />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
-<<<<<<< HEAD
-      <Route path="/settings" element={<Settings />}></Route>
-=======
       <Route path="/settings" element={<SettingsPage />}></Route>
->>>>>>> 1e0f51c93d7c52c388dcd250d007c5647b2984d3
       <Route path="/profile" element={<ProfilePage />}></Route>
       <Route path="/organizations/:organizationId" element={<OrganizationPage />}></Route>
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>
