@@ -57,7 +57,7 @@ export default function SignIn() {
         })
         .then((resp) => {
           if (resp.status === 200) {
-            console.log("Login successful");
+            console.log("Login successful", resp.data);
             localStorage.setItem("userId", resp.data.id);
             localStorage.setItem("userType", resp.data.type);
             setRedirect(true);
@@ -140,7 +140,7 @@ export default function SignIn() {
                 </Link>
               </Grid> */}
               <Grid item alignItems="center">
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

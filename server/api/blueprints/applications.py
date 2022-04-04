@@ -13,9 +13,6 @@ applications = Blueprint("applications", __name__, url_prefix="/applications")
 @applications.route("/", methods=["GET", "POST"])
 def application_root():
     if request.method == "GET":
-        import pdb
-
-        pdb.set_trace()
         scholarship_id = request.args.get("scholarship_id")
         student_id = request.args.get("student_id")
         application_dict = db.applications.find_one(
@@ -24,6 +21,7 @@ def application_root():
         if not application_dict:
             return {"message": "Application doesn't exist"}, status.HTTP_404_NOT_FOUND
 
+        application_dict["_id"] = str(application_dict["_id"])
         return application_dict, status.HTTP_200_OK
 
     # get user id

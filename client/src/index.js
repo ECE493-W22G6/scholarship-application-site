@@ -2,7 +2,6 @@ import React from "react";
 import { render } from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./components/App";
-import Student from "./components/Student";
 import "./index.css";
 import OrganizationPage from "./components/OrganizationPage";
 import SignUp from "./components/SignUp";

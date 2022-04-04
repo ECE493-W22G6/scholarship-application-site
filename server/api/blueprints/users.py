@@ -71,6 +71,7 @@ def login():
     # success
     return {
         "message": "Login successful",
+        "type": user.get("type"),
         "id": str(user.get("_id")),
     }, status.HTTP_200_OK
 

@@ -1,4 +1,5 @@
 import {
+  Backdrop,
   Button,
   Card,
   CircularProgress,
@@ -15,19 +16,14 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Navigate, useParams } from "react-router";
 import NavBar from "./NavBar";
-import {
-  getApplication,
-  getScholarshipInfo,
-  ScholarshipInfo,
-} from "./ScholarshipPage";
+import { getScholarshipInfo, ScholarshipInfo } from "./ScholarshipPage";
 
 const ApplyPage = () => {
   const params = useParams();
   const { scholarship, isLoading } = getScholarshipInfo(params.scholarshipId);
   const [grade, setGrade] = useState(6);
   const [redirect, setRedirect] = useState(false);
-  const userId = localStorage.getItem("userType");
-  const { prefill_application } = getApplication(scholarship.id, userId);
+  const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -58,7 +54,7 @@ const ApplyPage = () => {
     if (!(firstName && lastName && email && school)) {
       return;
     }
-    // setisLoading(true);
+    setSubmitting(true);
     axios
       .post("/api/applications/", application)
       .then((resp) => {
@@ -75,6 +71,12 @@ const ApplyPage = () => {
 
   return (
     <div className="ApplyPage">
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={submitting}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {redirect && <Navigate to={`/scholarships/${params.scholarshipId}`} />}
       <NavBar />
       <Container maxWidth="md">

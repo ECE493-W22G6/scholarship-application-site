@@ -112,9 +112,10 @@ ScholarshipInfo.propTypes = {
 };
 
 const getApplication = (scholarshipId, studentId) => {
-  const url = `/api/scholarships/`;
+  const url = `/api/applications/`;
   const args = { scholarship_id: scholarshipId, student_id: studentId };
   const { data, error } = useSWR({ url, args }, appFetcher);
+  console.log("get app result " + JSON.stringify(data));
 
   return { application: data, error };
 };

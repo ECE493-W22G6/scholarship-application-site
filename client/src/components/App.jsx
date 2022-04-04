@@ -1,7 +1,7 @@
 /* eslint-disable require-jsdoc */
-import "./App.css";
+import { Card, Container, Typography } from "@mui/material";
 import React from "react";
-import { Container, Typography, Link, Box, Card } from "@mui/material";
+import "./App.css";
 import NavBar from "./NavBar";
 
 function App() {

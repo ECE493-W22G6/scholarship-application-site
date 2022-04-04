@@ -1,16 +1,36 @@
 import React from "react";
-import { AppBar, Toolbar, Typography, Link } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Link,
+  Button,
+  CssBaseline,
+} from "@mui/material";
+import { GlobalStyles } from "@mui/styled-engine";
 
 const NavBar = () => {
+  const handleClick = (event) => {
+    localStorage.clear();
+  };
+
   return (
     <React.Fragment>
-      <AppBar position="sticky">
-        <Toolbar>
-          {/* content */}
-          <Typography variant="h5" color="inherit" noWrap sx={{ flexGrow: 1 }}>
+      <GlobalStyles
+        styles={{ ul: { margin: 0, padding: 0, listStyle: "none" } }}
+      />
+      <CssBaseline />
+      <AppBar
+        position="sticky"
+        color="default"
+        elevation={0}
+        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
+      >
+        <Toolbar sx={{ flexWrap: "wrap" }}>
+          <Typography variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
             Scholarship Application Site
           </Typography>
-          <nav align="right">
+          <nav>
             <Link
               variant="button"
               color="text.primary"
@@ -19,15 +39,12 @@ const NavBar = () => {
             >
               All scholarships
             </Link>
-            {/* <Link
+            <Link
               variant="button"
               color="text.primary"
-              href="/notifications"
+              href="/profile"
               sx={{ my: 1, mx: 1.5 }}
             >
-              Notifications
-            </Link> */}
-            <Link variant="button" color="text.primary" href="/profile">
               Profile
             </Link>
             <Link
@@ -39,6 +56,14 @@ const NavBar = () => {
               Settings
             </Link>
           </nav>
+          <Button
+            href="/signin"
+            variant="outlined"
+            sx={{ my: 1, mx: 1.5 }}
+            onClick={handleClick}
+          >
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
     </React.Fragment>
