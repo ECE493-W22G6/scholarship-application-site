@@ -9,7 +9,7 @@ function App() {
     <div>
       <NavBar />
       <Container maxWidth="sm" className="App" alignItems="center">
-        <Card sx={{ my: 4, p: 2 }} variant="outlined">
+        <Card sx={{ my: 4, p: 2 }} variant="outlined" alignItems="center">
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
