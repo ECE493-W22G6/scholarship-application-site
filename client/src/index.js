@@ -2,7 +2,6 @@ import React from "react";
 import { render } from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import AllScholarshipsPage from "./components/AllScholarshipsPage";
 import App from "./components/App";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
