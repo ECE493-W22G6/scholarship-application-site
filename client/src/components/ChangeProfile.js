@@ -1,9 +1,10 @@
-// Code borrowed from: https://github.com/mui/material-ui/blob/v5.5.2/docs/data/material/getting-started/templates/sign-up/SignUp.js
 
+import * as React from "react";
+import { Component } from "react";
+import Button from "@mui/material/Button";
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
@@ -11,53 +12,60 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import * as React from "react";
+
 
 const theme = createTheme();
 
-export default function SignUp() {
-    const [userType, setUserType] = React.useState("");
-
-    const handleChange = (event) => {
-        setUserType(event.target.value);
+export default class UploadImages extends Component {
+    state = {
+        previewImage: undefined,
     };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        const firstName = data.get("firstName");
-        const lastName = data.get("lastName");
-        const email = data.get("email");
-        const password = data.get("password");
-        const type = userType;
-        console.log({
-            first_name: data.get("firstName"),
-            last_name: data.get("lastName"),
-            email: data.get("email"),
-            password: data.get("password"),
-            type: userType,
-        });
-        if (!(firstName && lastName && email && password && type)) {
-            return;
+
+    render() {
+        const {
+            previewImage,
+        } = this.state;
+
+        const selectFile = (event) => {
+            this.setState({
+                previewImage: URL.createObjectURL(event.target.files[0]),
+            });
         }
-        // TODO: Axios command to verify if pass is correct otherwise give error response to display
-        // axios
-        //     .post("/api/users/register/", {
-        //         first_name: data.get("firstName"),
-        //         last_name: data.get("lastName"),
-        //         email: data.get("email"),
-        //         password: data.get("password"),
-        //         type: userType,
-        //     })
-        //     .then((resp) => {
-        //         console.log(`recv'd resp: ${resp}`);
-        //     })
-        //     .catch((e) => {
-        //         console.log(e);
-        //     });
-    };
 
-    return (
+        const handleSubmit = (event) => {
+            event.preventDefault();
+            const data = new FormData(event.currentTarget);
+            const firstName = data.get("firstName");
+            const lastName = data.get("lastName");
+            const email = data.get("email");
+            const password = data.get("password");
+            console.log({
+                first_name: data.get("firstName"),
+                last_name: data.get("lastName"),
+                email: data.get("email"),
+                password: data.get("password"),
+            });
+            if (!(firstName && lastName && email && password)) {
+                return;
+            }
+            // TODO: Axios command to verify if pass is correct otherwise give error response to display
+            // axios
+            //     .post("", {
+            //         first_name: data.get("firstName"),
+            //         last_name: data.get("lastName"),
+            //         email: data.get("email"),
+            //         password: data.get("password"),
+            //     })
+            //     .then((resp) => {
+            //         console.log(`Got response: ${resp}`);
+            //     })
+            //     .catch((e) => {
+            //         console.log(e);
+            //     });
+        };
+
+        return (
         <ThemeProvider theme={theme}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -83,24 +91,28 @@ export default function SignUp() {
                     >
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <input
-                                    id="btn-upload"
-                                    name="btn-upload"
-                                    style={{ display: 'none' }}
-                                    type="file"
-                                    accept="image/*"
-                                // onChange={this.selectFile} 
-                                />
-                                <Button
-                                    className="btn-choose"
-                                    variant="outlined"
-                                    fullWidth
-                                    id="icon"
-                                    label="Icon"
-                                    autoFocus
-                                    >
-                                    Choose Image
-                                </Button>
+                                <div className="mg20">
+                                    <label htmlFor="btn-upload">
+                                        <input
+                                            id="btn-upload"
+                                            name="btn-upload"
+                                            style={{ display: "none" }}
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={(event) => selectFile(event)}
+                                        />
+                                        <Button className="btn-choose" variant="outlined" component="span">
+                                            Choose Image
+                                        </Button>
+                                    </label>
+
+                                    {previewImage && (
+                                        <div>
+                                            <img className="preview my20" src={previewImage} alt="" />
+                                        </div>
+                                    )}
+
+                                </div>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <TextField
@@ -156,5 +168,6 @@ export default function SignUp() {
                 </Box>
             </Container>
         </ThemeProvider>
-    );
+        );
+    }
 }
