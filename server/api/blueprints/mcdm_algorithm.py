@@ -1,8 +1,5 @@
-from flask import Blueprint, request
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_api import status
-from json.tool import main
 import matplotlib.pyplot as plt
+from IPython.display import HTML
 
 class Mcdm:
     """m = Mcdm(opts)
@@ -180,8 +177,8 @@ class Mcdm:
         table_stop = '\n</table>\n'
         return(table_start+header+rows+table_stop)
 
-    # def to_html(self):
-    #     return(HTML(self._raw_html()))
+    def to_html(self):
+        return(HTML(self._raw_html()))
     
 def travel_example():
     travel = Mcdm(('Car','Bus','Train'))
@@ -200,64 +197,3 @@ def travel_example():
 
 if __name__=='__main__':
     t=travel_example()
-
-
-mcdm = Blueprint("mcdm", __name__, url_prefix="/mcdm")
-
-@mcdm.route("/test", methods=["POST"])
-def run_mcdm():
-    """
-    get /mcdm/schoolarship/<id>/: runs the mcdm algorithm, including querying for all scorecards
-
-    sample input:
-
-    {
-    "application_id" : "101",
-    "scholarship_id" : "101",
-    "judge_id" : "101",
-    "student_id" : "Mustafa",
-    "judge_score" : {
-        "academic" : 1,
-        "leadership" : 1,
-        "volunteer" : 5
-        },
-    "weight_criteria" : {
-        "academic" : 0.1,
-        "leadership" : 0,
-        "volunteer" : 0.9
-        }
-    }
-
-
-    """
-    form = request.get_json()
-    student_id = form.get("student_id")
-    aplication_id = form.get("application_id")
-    judge_id = form.get("judge_id")
-    scholarship_id = form.get("scholarship_id")
-    judge_score = form.get("judge_score")
-    weight_criteria = form.get("weight_criteria")
-
-    bestStudent = Mcdm(('base', student_id))
-    
-    studentDict = {
-    ('base','acedemic'):1,
-    ('base','leadership'):1,
-    ('base','volunteer'):1,
-    (student_id,'acedemic'):judge_score['academic'],
-    (student_id,'leadership'):judge_score['leadership'],
-    (student_id,'volunteer'):judge_score['volunteer']
-    }
-    bestStudent.set_scores_dict(studentDict)
-    bestStudent.weight_criteria('Intuition',{'acedemic':weight_criteria['academic'],'leadership':weight_criteria['leadership'],
-    'volunteer':weight_criteria['volunteer']})
-    
-    student_total_score = bestStudent.get_score(student_id, 'Intuition')
-
-
-    # success
-    return {
-        "message": "Calculations successful",
-        "Student_id": student_id,
-        "student_total_score" : student_total_score
-    }, status.HTTP_200_OK
