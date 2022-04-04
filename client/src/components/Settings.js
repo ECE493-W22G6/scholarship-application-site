@@ -24,8 +24,9 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import Password from '@mui/icons-material/Password';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 
-import ChangeProfile from './ChangeProfile';
+// import ChangeProfile from './ChangeProfileDEPRACATED';
 import ChangePassword from './ChangePassword';
+import UploadImages from './ChangeProfile';
 
 const styles = {
     root: {
@@ -66,28 +67,42 @@ const styles = {
     },
 };
 
-class Settings extends React.Component {
+class Settings extends React.PureComponent {
     state = {
         open: true,
         showListItem: 1,
+        currentFile: undefined,
+        previewImage: undefined,
+        isError: false,
+        imageInfos: [],
     };
 
     render() {
         const openDrawer = (boolean) => {
-            console.log(this.state)
             this.setState({
                 ...this.state,
                 open: boolean
-            });
+            }, console.log(this.state));
         };
 
-        const showListItem = (integer) => {
-            console.log(this.state)
-            this.setState({
+        const showListItem = async(integer) => {
+            await this.setState({
                 ...this.state,
                 showListItem: integer
             });
+            console.log(this.state)
+            // this.forceUpdate()
         };
+
+        const selectFile = (event1) => {
+            this.setState({
+                ...this.state,
+                currentFile: event1.target.files[0],
+                previewImage: URL.createObjectURL(event1.target.files[0]),
+                progress: 0,
+                message: ""
+            });
+        }
 
         const { classes } = this.props;
 
@@ -154,7 +169,9 @@ class Settings extends React.Component {
                                 </ListItemIcon>
                                 <ListItemText 
                                     primary="Change Profile"
-                                    onClick={() => showListItem(1)}
+                                    onClick={(event) => {
+                                        showListItem(1)
+                                    }}
                                 />
                             </ListItem>
                             <ListItem button>
@@ -163,7 +180,9 @@ class Settings extends React.Component {
                                 </ListItemIcon>
                                 <ListItemText 
                                     primary="Change Password"
-                                    onClick={() => showListItem(2)}
+                                    onClick={(event) => {
+                                        showListItem(2)
+                                    }}
                                 />
                             </ListItem>
                         </div>
@@ -184,7 +203,7 @@ class Settings extends React.Component {
                 <main className={classes.content}>
                     <div className={classes.appBarSpacer} />
                     <div className={classes.tableContainer}>
-                        {this.state.showListItem === 1 && <ChangeProfile />}
+                        {this.state.showListItem === 1 && <UploadImages />}
                         {this.state.showListItem === 2 && <ChangePassword />}
                     </div>
                 </main>
