@@ -28,6 +28,8 @@ const ScholarshipPage = () => {
 
 const ScholarshipInfo = ({ scholarshipId, buttonState }) => {
   const { scholarship, isLoading } = getScholarshipInfo(scholarshipId);
+  const userId = localStorage.getItem("userId");
+  // const { application } = getApplication(scholarshipId, userId);
 
   if (isLoading) {
     return (
@@ -74,7 +76,10 @@ const ScholarshipInfo = ({ scholarshipId, buttonState }) => {
 
           {buttonState === "apply" && (
             <Grid item textAlign="right" sx={{ mt: 5 }}>
-              <Button variant="contained" href={`/apply/${scholarshipId}`}>
+              <Button
+                variant="contained"
+                href={`/scholarships/${scholarshipId}/apply`}
+              >
                 Apply
               </Button>
             </Grid>
@@ -89,11 +94,24 @@ ScholarshipInfo.propTypes = {
   scholarshipId: PropTypes.string,
 };
 
+const getApplication = (scholarshipId, studentId) => {
+  const url = `/api/scholarships/`;
+  console.log("test1", scholarshipId, studentId);
+  const { data, error } = useSWR(
+    { url, args: { scholarship_id: scholarshipId, student_id: studentId } },
+    appFetcher
+  );
+
+  return { application: data, error };
+};
+
 const getScholarshipInfo = (scholarshipId) => {
   const { data, error } = useSWR(
     `/api/scholarships/${scholarshipId}/`,
     fetcher
   );
+  console.log(data);
+  console.log(error);
 
   return {
     scholarship: data,
@@ -102,9 +120,15 @@ const getScholarshipInfo = (scholarshipId) => {
   };
 };
 
+const appFetcher = (url, args) =>
+  axios.get(url, { params: args }).then((res) => {
+    console.log(JSON.stringify(res.data));
+    return res.data;
+  });
+
 const fetcher = (url) =>
   axios.get(url).then((res) => {
-    // console.log(JSON.stringify(res));
+    console.log(JSON.stringify(res.data));
     return res.data;
   });
 
