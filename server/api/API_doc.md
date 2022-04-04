@@ -389,6 +389,32 @@ Success notification:
 
 ## MCDM
 
-### GET `/mcdm/`
+### POST `/mcdm/test`
 
-To be implemented
+Feeds a sample json object which then the score is calculated for that student.
+the score of the student is stored in student_total_score
+
+json object example: 
+{
+    "application_id" : "101",
+    "scholarship_id" : "101",
+    "judge_id" : "101",
+    "student_id" : "Mustafa",
+    "judge_score" : {
+        "academic" : 1,
+        "leadership" : 1,
+        "volunteer" : 5
+        },
+    "weight_criteria" : {
+        "academic" : 0.1,
+        "leadership" : 0,
+        "volunteer" : 0.9
+        }
+}
+
+Success response:
+
+  - message: Calculations successful,
+    Student_id: student_id,
+    student_total_score : student_total_score
+    code: 200 ok
