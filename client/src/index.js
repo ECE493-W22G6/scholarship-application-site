@@ -1,13 +1,13 @@
 import React from "react";
 import { render } from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+
+import AllScholarshipsPage from "./components/AllScholarshipsPage";
 import App from "./components/App";
-import Student from "./components/Student";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import Settings from "./components/Settings";
 import ProfilePage from "./ProfilePage";
-
 import OrganizationPage from "./components/OrganizationPage";
 import ScholarshipForm from "./components/ScholarshipForm";
 import ScholarshipPage from "./components/ScholarshipPage";
@@ -16,6 +16,7 @@ import JudgePage from "./components/JudgePage";
 import AllScholarshipsPage from "./components/AllScholarshipsPage";
 
 import "./index.css";
+
 // code referenced from https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react
 // You can choose your kind of history here (e.g. browserHistory)
 // import {Router, hashHistory as history} from 'react-router';
@@ -29,7 +30,11 @@ render(
       <Route path="/" element={<App />}></Route>
       <Route path="/signin" element={<SignIn />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
+<<<<<<< HEAD
       <Route path="/settings" element={<Settings />}></Route>
+=======
+      <Route path="/settings" element={<SettingsPage />}></Route>
+>>>>>>> 1e0f51c93d7c52c388dcd250d007c5647b2984d3
       <Route path="/profile" element={<ProfilePage />}></Route>
       <Route path="/organizations/:organizationId" element={<OrganizationPage />}></Route>
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>

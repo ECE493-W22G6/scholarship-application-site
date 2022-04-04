@@ -36,7 +36,7 @@ const UserInfo = ({ userId }) => {
       }}
     >
       <Grid container spacing={2} alignItems="flex-end">
-        {user.icon_url && (
+        {user && user.icon_url && (
           <Grid item>
             <Avatar src={user.icon_url} alt={user.first_name} />
           </Grid>
@@ -79,3 +79,5 @@ function useUser(id) {
 const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 export default UserInfo;
+
+export { useUser };
