@@ -2,13 +2,20 @@ import React from "react";
 import { render } from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./components/App";
-import Organization from "./components/Organization";
 import Student from "./components/Student";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import Settings from "./components/Settings";
-import "./index.css";
+import ProfilePage from "./ProfilePage";
 
+import OrganizationPage from "./components/OrganizationPage";
+import ScholarshipForm from "./components/ScholarshipForm";
+import ScholarshipPage from "./components/ScholarshipPage";
+import ApplyPage from "./components/ApplyPage";
+import JudgePage from "./components/JudgePage";
+import AllScholarshipsPage from "./components/AllScholarshipsPage";
+
+import "./index.css";
 // code referenced from https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react
 // You can choose your kind of history here (e.g. browserHistory)
 // import {Router, hashHistory as history} from 'react-router';
@@ -23,8 +30,15 @@ render(
       <Route path="/signin" element={<SignIn />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/student" element={<Student />}></Route>
-      <Route path="/organization" element={<Organization />}></Route>
       <Route path="/settings" element={<Settings />}></Route>
+      <Route path="/profile" element={<ProfilePage />}></Route>
+      <Route path="/organizations/:organizationId" element={<OrganizationPage />}></Route>
+      <Route path="/submitscholarship" element={<ScholarshipForm />}/>
+      <Route path="/scholarships/:scholarshipId" element={<ScholarshipPage />}/>
+      <Route path="/scholarships/:scholarshipId/apply" element={<ApplyPage />}/>
+      <Route path="/scholarships/:scholarshipId/judge/:applicationId" element={<JudgePage />}/>
+      <Route path="/scholarships/" element={<AllScholarshipsPage />}/>
+
       {/* <Route path="/notifications" element={<Notifications/>}></Route> */}
     </Routes>
   </BrowserRouter>,

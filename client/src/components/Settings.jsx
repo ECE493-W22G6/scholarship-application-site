@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { withStyles } from '@mui/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Drawer from '@mui/material/Drawer';
@@ -85,7 +84,7 @@ class Settings extends React.PureComponent {
             }, console.log(this.state));
         };
 
-        const showListItem = async(integer) => {
+        const showListItem = async (integer) => {
             await this.setState({
                 ...this.state,
                 showListItem: integer
@@ -111,17 +110,12 @@ class Settings extends React.PureComponent {
                 <CssBaseline />
                 <AppBar
                     position="absolute"
-                    className={classNames(classes.appBar, this.state.open && classes.appBarShift)}
                 >
                     <Toolbar disableGutters={!this.state.open} className={classes.toolbar}>
                         <IconButton
                             color="inherit"
                             aria-label="Open drawer"
                             onClick={() => openDrawer(true)}
-                            className={classNames(
-                                classes.menuButton,
-                                this.state.open && classes.menuButtonHidden,
-                            )}
                         >
                             <MenuIcon />
                         </IconButton>
@@ -137,7 +131,7 @@ class Settings extends React.PureComponent {
                         <IconButton color="inherit">
                             <Badge color="secondary">
                                 <Logout
-                                    onClick={ () => {
+                                    onClick={() => {
                                         localStorage.clear()
                                         // Redirect to login
                                         window.location.href = '/signin'
@@ -150,9 +144,6 @@ class Settings extends React.PureComponent {
                 </AppBar>
                 <Drawer
                     variant="permanent"
-                    classes={{
-                        paper: classNames(classes.drawerPaper, !this.state.open && classes.drawerPaperClose),
-                    }}
                     open={this.state.open}
                 >
                     <div className={classes.toolbarIcon}>
@@ -167,7 +158,7 @@ class Settings extends React.PureComponent {
                                 <ListItemIcon>
                                     <AccountCircle />
                                 </ListItemIcon>
-                                <ListItemText 
+                                <ListItemText
                                     primary="Change Profile"
                                     onClick={(event) => {
                                         showListItem(1)
@@ -178,7 +169,7 @@ class Settings extends React.PureComponent {
                                 <ListItemIcon>
                                     <Password />
                                 </ListItemIcon>
-                                <ListItemText 
+                                <ListItemText
                                     primary="Change Password"
                                     onClick={(event) => {
                                         showListItem(2)

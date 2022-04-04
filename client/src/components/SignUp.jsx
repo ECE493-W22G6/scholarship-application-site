@@ -1,6 +1,7 @@
 // Code borrowed from: https://github.com/mui/material-ui/blob/v5.5.2/docs/data/material/getting-started/templates/sign-up/SignUp.js
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { Backdrop, CircularProgress } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -17,6 +18,8 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import * as React from "react";
+import { Navigate } from "react-router-dom";
+import NavBar from "./NavBar";
 
 function Copyright(props) {
   return (
@@ -37,6 +40,8 @@ const theme = createTheme();
 
 export default function SignUp() {
   const [userType, setUserType] = React.useState("");
+  const [redirect, setRedirect] = React.useState(false);
+  const [isLoading, setisLoading] = React.useState(false);
 
   const handleChange = (event) => {
     setUserType(event.target.value);
@@ -60,6 +65,7 @@ export default function SignUp() {
     if (!(firstName && lastName && email && password && type)) {
       return;
     }
+    setisLoading(true);
     axios
       .post("/api/users/register/", {
         first_name: data.get("firstName"),
@@ -70,6 +76,9 @@ export default function SignUp() {
       })
       .then((resp) => {
         console.log(`recv'd resp: ${resp}`);
+        if (resp.status === 201) {
+          setRedirect(true);
+        }
       })
       .catch((e) => {
         console.log(e);
@@ -78,6 +87,14 @@ export default function SignUp() {
 
   return (
     <ThemeProvider theme={theme}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      {redirect && <Navigate to="/signin" />}
+      <NavBar />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

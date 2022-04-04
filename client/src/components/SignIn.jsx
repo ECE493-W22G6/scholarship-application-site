@@ -1,6 +1,7 @@
 // Code borrowed from: https://github.com/mui/material-ui/blob/v5.5.2/docs/data/material/getting-started/templates/sign-in/SignIn.js
 
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { Backdrop, CircularProgress } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -13,6 +14,8 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import * as React from "react";
+import { Navigate } from "react-router";
+import NavBar from "./NavBar";
 
 function Copyright(props) {
   return (
@@ -22,12 +25,9 @@ function Copyright(props) {
       align="center"
       {...props}
     >
-      {"Copyright © "}
       <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
+        Template code from mui.
+      </Link>
     </Typography>
   );
 }
@@ -35,6 +35,9 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+  const [redirect, setRedirect] = React.useState(false);
+  const [isLoading, setisLoading] = React.useState(false);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -46,6 +49,7 @@ export default function SignIn() {
     });
 
     if (email && password) {
+      setisLoading(true);
       axios
         .post("/api/users/login/", {
           email: data.get("email"),
@@ -53,8 +57,10 @@ export default function SignIn() {
         })
         .then((resp) => {
           if (resp.status === 200) {
-            console.log("Login successful");
+            console.log("Login successful", resp.data);
             localStorage.setItem("userId", resp.data.id);
+            localStorage.setItem("userType", resp.data.type);
+            setRedirect(true);
           }
         })
         .catch((e) => {
@@ -65,6 +71,14 @@ export default function SignIn() {
 
   return (
     <ThemeProvider theme={theme}>
+      {redirect && <Navigate to="/" />}
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <NavBar />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -126,7 +140,7 @@ export default function SignIn() {
                 </Link>
               </Grid> */}
               <Grid item alignItems="center">
-                <Link href="#" variant="body2">
+                <Link href="/signup" variant="body2">
                   {"Don't have an account? Sign Up"}
                 </Link>
               </Grid>

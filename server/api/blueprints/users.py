@@ -44,6 +44,7 @@ def register():
 
     return {
         "message": "Success",
+        "type": user_type,
         "id": str(new_user_id),
     }, status.HTTP_201_CREATED
 
@@ -70,6 +71,7 @@ def login():
     # success
     return {
         "message": "Login successful",
+        "type": user.get("type"),
         "id": str(user.get("_id")),
     }, status.HTTP_200_OK
 
