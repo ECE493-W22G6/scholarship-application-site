@@ -19,7 +19,7 @@ def scholarship():
                 )
             )
         else:
-            res = list(db.scholarships.find())
+            res = list(db.scholarships.find({"open": True}))
         for s in res:
             s["_id"] = str(s["_id"])
         return jsonify({"result": res}), status.HTTP_200_OK
