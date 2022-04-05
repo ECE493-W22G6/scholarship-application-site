@@ -60,9 +60,11 @@ def update_user_icon(user_id, new_icon_url):
     return resp
 
 
-def get_scorecard(user_id):
-    user = db.scorecards.find_one({"_id": ObjectId(user_id)})
-    if user:
-        return user
+def get_scorecards(scholarship_id):
+    # user = db.scorecards.find_one({"_id": ObjectId(user_id)})
+    cursor = db.scorecards.find({"scholarship_id": "6248d7666a62d69298a0083c"})
+
+    if cursor:
+        return cursor
     else:
         return {}

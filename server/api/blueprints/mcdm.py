@@ -1,8 +1,9 @@
-from flask import Blueprint, request
+from pydoc import doc
+from flask import Blueprint, request, session
 from flask_api import status
 
 from api.database import (
-    get_scorecard
+    get_scorecards
 )
 
 class algorithm:
@@ -64,31 +65,52 @@ def run_mcdm():
 
 
     """
-
-    form = request.get_json()
-    _id = form.get("_id")
-
-    bestStudent = algorithm(('base', _id))
-    user_id = get_scorecard(_id)
-
-    studentDict = {
-    ('base','acedemic'):1,
-    ('base','leadership'):1,
-    ('base','volunteer'):1,
-    (_id,'acedemic'):user_id['judge_scores']['academic'],
-    (_id,'leadership'):user_id['judge_scores']['leadership'],
-    (_id,'volunteer'):user_id['judge_scores']['volunteer']
-    }
-    bestStudent.setDictionary(studentDict)
-    bestStudent.set_weight({'acedemic':user_id['weight_criteria']['academic'],'leadership':user_id['weight_criteria']['leadership'],
-    'volunteer':user_id['weight_criteria']['volunteer']}, 'Grade')
     
-    student_total_score = bestStudent.get_calculation(_id, 'Grade')
+    form = request.get_json()
+    _id = form.get("scholarship_id")
 
+    num_of_awards = form.get("number_of_awards")
+
+    cursor = get_scorecards(_id)
+    score_log = {}
+
+    for document in cursor:
+        #if user doesnt exist,add them with a val 0 (total awards)
+        # go through all score cards, calculate if won, update by 1 if so
+        bestStudent = algorithm(('base', document['user_id']))
+
+        studentDict = {
+        ('base','acedemic'):1,
+        ('base','leadership'):1,
+        ('base','volunteer'):1,
+        (document['user_id'],'acedemic'):document['judge_scores']['academic'],
+        (document['user_id'],'leadership'):document['judge_scores']['leadership'],
+        (document['user_id'],'volunteer'):document['judge_scores']['volunteer']
+        }
+        bestStudent.setDictionary(studentDict)
+        bestStudent.set_weight({'acedemic':document['weight_criteria']['academic'],'leadership':document['weight_criteria']['leadership'],
+        'volunteer':document['weight_criteria']['volunteer']}, 'Grade')
+    
+        student_total_score = bestStudent.get_calculation(document['user_id'], 'Grade')
+        score_log[document['user_id']] = student_total_score
+    
+    sortedLog = sorted(score_log.items(), key=lambda x:x[1], reverse=True)
+
+    result = []
+    count = 0
+
+    for key in sortedLog:
+        result.append(key)
+        count += 1
+        if count >= int(num_of_awards):
+            break
+
+    student_winners = [i[0] for i in result]
 
     # success
     return {
         "message": "Calculations successful",
-        "_id": _id,
-        "student_total_score" : student_total_score
+        "winners": student_winners
+        # "_id": _id,
+        # "student_total_score" : student_total_score
     }, status.HTTP_200_OK
