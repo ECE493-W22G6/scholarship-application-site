@@ -61,8 +61,7 @@ def update_user_icon(user_id, new_icon_url):
 
 
 def get_scorecards(scholarship_id):
-    # user = db.scorecards.find_one({"_id": ObjectId(user_id)})
-    cursor = db.scorecards.find({"scholarship_id": "6248d7666a62d69298a0083c"})
+    cursor = db.scorecards.find({"scholarship_id": scholarship_id})
 
     if cursor:
         return cursor
@@ -70,8 +69,6 @@ def get_scorecards(scholarship_id):
         return {}
 
 def add_winners(student_winners, scholarship_id):
-    # user = db.scholarships.insert_one(user)
-
     resp = db.scholarships.update_one(
         {"_id": ObjectId(scholarship_id)}, {"$set": {"winners": student_winners}}
     )

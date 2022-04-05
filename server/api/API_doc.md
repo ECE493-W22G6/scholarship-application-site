@@ -389,32 +389,38 @@ Success notification:
 
 ## MCDM
 
-### POST `/mcdm/test`
+### POST `/mcdm`
 
-Feeds a sample json object which then the score is calculated for that student.
-the score of the student is stored in student_total_score
+Gets feeded scholarship_id which then the score is calculated for that student.
+the score of the student is stored in student_total_score.
+Each student for that scholarship is paired up with a total scored which is then 
+sorted. 
 
-json object example: 
+num_of_awards is the amount of awards available for that scholarship and therefore
+the top X students are posted in db.scholarships['winners'], X being the 
+num_of_awards
+
+input example: 
 {
-    "application_id" : "101",
-    "scholarship_id" : "101",
-    "judge_id" : "101",
-    "student_id" : "Mustafa",
-    "judge_score" : {
-        "academic" : 1,
-        "leadership" : 1,
-        "volunteer" : 5
-        },
-    "weight_criteria" : {
-        "academic" : 0.1,
-        "leadership" : 0,
-        "volunteer" : 0.9
-        }
+    "scholarship_id" : "101"
 }
 
 Success response:
 
   - message: Calculations successful,
-    Student_id: student_id,
-    student_total_score : student_total_score
+    winners: LIST OF WINNERS
     code: 200 ok
+
+### POST `/scholarships/winners/`
+
+Adds the winners for the given scholarship id
+
+Request body:
+
+- student_winners, student_id from mcdm
+
+Success response:
+
+- message: Calculations successful,
+  winners: LIST OF WINNERS
+  code: 200 ok

@@ -4,8 +4,10 @@ from flask_api import status
 
 from api.database import (
     get_scorecards,
-    add_winners
+    add_winners,
+    db
 )
+from bson.objectid import ObjectId
 
 class algorithm:
 
@@ -40,7 +42,7 @@ class algorithm:
 
 mcdm = Blueprint("mcdm", __name__, url_prefix="/mcdm")
 
-@mcdm.route("/test", methods=["POST"])
+@mcdm.route("/", methods=["POST"])
 def run_mcdm():
     """
     get /mcdm/schoolarship/<id>/: runs the mcdm algorithm, including querying for all scorecards
@@ -58,7 +60,8 @@ def run_mcdm():
     form = request.get_json()
     scholarship_id = form.get("scholarship_id")
 
-    num_of_awards = form.get("number_of_awards")
+    scholarship_info = db.scholarships.find_one({"_id": ObjectId(scholarship_id)})
+    num_of_awards = scholarship_info['number_of_awards']
 
     cursor = get_scorecards(scholarship_id)
     score_log = {}
