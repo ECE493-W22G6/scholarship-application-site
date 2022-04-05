@@ -14,6 +14,7 @@ import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import "./index.css";
 import ProfilePage from "./components/ProfilePage";
+import JudgeApplicationsPage from "./components/JudgeApplicationsPage";
 
 
 // code referenced from https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react
@@ -35,6 +36,7 @@ render(
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>
       <Route path="/scholarships/:scholarshipId" element={<ScholarshipPage />}/>
       <Route path="/scholarships/:scholarshipId/apply" element={<ApplyPage />}/>
+      <Route path="/scholarships/:scholarshipId/judge" element={<JudgeApplicationsPage />}/>
       <Route path="/scholarships/:scholarshipId/judge/:applicationId" element={<JudgePage />}/>
       <Route path="/scholarships/" element={<AllScholarshipsPage />}/>
       <Route path="/notifications" element={<NotificationsPage/>}></Route>

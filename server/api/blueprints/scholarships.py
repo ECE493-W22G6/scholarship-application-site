@@ -79,10 +79,10 @@ def get_scholarship(scholarship_id):
 
 @scholarships.route("/<scholarship_id>/applications/", methods=["GET"])
 def get_scholarship_applications(scholarship_id):
-    scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
+    scholarship = db.scholarships.find_one({"_id": ObjectId(scholarship_id)})
     if not scholarship:
         return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
-    return scholarship.get("applications"), status.HTTP_200_OK
+    return {"result": scholarship.get("applications")}, status.HTTP_200_OK
 
 
 @scholarships.route("/<scholarship_id>/judge/", methods=["GET", "POST"])
@@ -131,6 +131,11 @@ def judge_application(scholarship_id, application_id):
         mcdm_input[f"{student_id}.{criteria}"] = int(score)
     scorecard_dict = request_data | mcdm_input
     inserted_scorecard = db.scorecards.insert_one(scorecard_dict)
+
+    db.scholarships.update_one(
+        {"_id": ObjectId(scholarship_id)},
+        {"$push": {"judged_applications": f"{application_id}.{user_id}"}},
+    )
 
     return {
         "message": "Scorecard successfully created",

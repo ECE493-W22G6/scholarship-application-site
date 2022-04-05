@@ -75,6 +75,16 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
     });
   };
 
+  const handleGetWinners = () => {
+    console.log("getting winners for " + scholarshipId);
+    axios.post(`/api/mcdm/`, { scholarship_id: scholarshipId }).then((resp) => {
+      console.log("recv'd resp: " + JSON.stringify(resp));
+      if (resp.status === 200) {
+        console.log("mcdm successful");
+      }
+    });
+  };
+
   if (isLoading) {
     return (
       <div align="center">
@@ -139,6 +149,7 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
               )}
               {userType === "judge" &&
                 scholarship &&
+                scholarship.judges &&
                 scholarship.judges.includes(userId) && (
                   <Button
                     variant="contained"
@@ -158,7 +169,20 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
                     onClick={handleCloseScholarship}
                   >
                     Close scholarship
-                  </Button>
+                  </Button>{" "}
+                  {scholarship.applications &&
+                    scholarship.judged_applications &&
+                    scholarship.applications.length *
+                      scholarship.judges.length ===
+                      scholarship.judged_applications.length && (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={handleGetWinners}
+                      >
+                        Get winners
+                      </Button>
+                    )}
                   <Dialog
                     open={openAddJudge}
                     onClose={handleClose}
