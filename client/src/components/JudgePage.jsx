@@ -43,7 +43,7 @@ const JudgePage = () => {
     const requestBody = {
       application_id: applicationId,
       scholarship_id: scholarshipId,
-      judge_id: localStorage.getItem("userId"),
+      judge_id: sessionStorage.getItem("userId"),
       student_id: application.user_id,
       judge_scores: judgeScoreMap,
     };

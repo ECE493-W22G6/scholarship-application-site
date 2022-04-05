@@ -12,7 +12,7 @@ import useSWR from "swr";
 import NavBar from "./NavBar";
 
 const NotificationsPage = () => {
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
   const { notifications, isLoading } = getNotifications(userId);
 
   return (

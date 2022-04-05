@@ -25,8 +25,8 @@ const ScholarshipPage = () => {
 
 const ScholarshipInfo = ({ scholarshipId, showButton }) => {
   const { scholarship, isLoading } = getScholarshipInfo(scholarshipId);
-  const userId = localStorage.getItem("userId");
-  const userType = localStorage.getItem("userType");
+  const userId = sessionStorage.getItem("userId");
+  const userType = sessionStorage.getItem("userType");
   const { application } = getApplication(scholarshipId, userId);
 
   if (isLoading) {

@@ -22,7 +22,7 @@ const ScholarshipForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const organizationId = localStorage.getItem("userId");
+    const organizationId = sessionStorage.getItem("userId");
     const name = data.get("name");
     const amount = data.get("amount");
     const numberOfAwards = data.get("numberOfAwards");

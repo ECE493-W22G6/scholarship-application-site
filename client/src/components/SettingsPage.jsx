@@ -54,8 +54,8 @@ const styles = {
 };
 
 const SettingsPage = () => {
-  const userType = localStorage.getItem("userType");
-  const userId = localStorage.getItem("userId");
+  const userType = sessionStorage.getItem("userType");
+  const userId = sessionStorage.getItem("userId");
   const { user, isLoading } = useUser(userId);
 
   const handleChangePassword = (event) => {

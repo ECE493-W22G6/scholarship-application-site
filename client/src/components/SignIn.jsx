@@ -58,8 +58,8 @@ export default function SignIn() {
         .then((resp) => {
           if (resp.status === 200) {
             console.log("Login successful", resp.data);
-            localStorage.setItem("userId", resp.data.id);
-            localStorage.setItem("userType", resp.data.type);
+            sessionStorage.setItem("userId", resp.data.id);
+            sessionStorage.setItem("userType", resp.data.type);
             setRedirect(true);
           }
         })

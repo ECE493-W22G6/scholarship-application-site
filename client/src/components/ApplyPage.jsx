@@ -23,7 +23,7 @@ import {
 } from "./ScholarshipPage";
 
 const ApplyPage = () => {
-  const studentId = localStorage.getItem("userId");
+  const studentId = sessionStorage.getItem("userId");
   const params = useParams();
   const { scholarship, isLoading } = getScholarshipInfo(params.scholarshipId);
   const [grade, setGrade] = useState(6);
@@ -48,7 +48,7 @@ const ApplyPage = () => {
       data.get(`question${i}`)
     );
     const application = {
-      user_id: localStorage.getItem("userId"),
+      user_id: sessionStorage.getItem("userId"),
       scholarship_id: params.scholarshipId,
       first_name: firstName,
       last_name: lastName,

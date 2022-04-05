@@ -13,7 +13,7 @@ import SettingsPage from "./components/SettingsPage";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import "./index.css";
-import ProfilePage from "./ProfilePage";
+import ProfilePage from "./components/ProfilePage";
 
 
 // code referenced from https://stackoverflow.com/questions/41956465/how-to-create-multiple-page-app-using-react

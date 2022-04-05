@@ -11,7 +11,7 @@ import React from "react";
 import useSWR from "swr";
 
 const UserInfo = ({ userId }) => {
-  // const userId = localStorage.getItem("userId");
+  // const userId = sessionStorage.getItem("userId");
   // const {user, isLoading} = useUser('62463e3ebd256454fbdc71fb);
   const { user, isLoading } = useUser(userId);
 

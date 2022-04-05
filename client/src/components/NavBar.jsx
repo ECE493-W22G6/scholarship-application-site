@@ -10,9 +10,9 @@ import {
 import { GlobalStyles } from "@mui/styled-engine";
 
 const NavBar = () => {
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
   const handleClick = (event) => {
-    localStorage.clear();
+    sessionStorage.clear();
   };
 
   return (
