@@ -11,6 +11,7 @@ import { GlobalStyles } from "@mui/styled-engine";
 
 const NavBar = () => {
   const userId = sessionStorage.getItem("userId");
+  const userType = sessionStorage.getItem("userType");
   const handleClick = (event) => {
     sessionStorage.clear();
   };
@@ -49,7 +50,11 @@ const NavBar = () => {
               <Link
                 variant="button"
                 color="text.primary"
-                href="/profile"
+                href={
+                  userType === "organization"
+                    ? `/organizations/${userId}`
+                    : "profile"
+                }
                 sx={{ my: 1, mx: 1.5 }}
               >
                 Profile

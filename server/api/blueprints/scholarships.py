@@ -48,11 +48,24 @@ def scholarship():
                 ]
             ]
         }
-        new_scholarship["organization_name"] = user.firstname
+        new_scholarship["organization_name"] = user.get("first_name")
+        new_scholarship["open"] = True
 
         db.scholarships.insert_one(new_scholarship)
 
         return {"message": "Scholarship successfully created"}, status.HTTP_201_CREATED
+
+
+@scholarships.route("/<scholarship_id>/close", methods=["POST"])
+def close_scholarship(scholarship_id):
+    scholarship_dict = db.scholarships.find_one({"_id": ObjectId(scholarship_id)})
+    if not scholarship_dict:
+        return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
+    resp = db.scholarships.update_one(
+        {"_id": ObjectId(scholarship_id)},
+        {"$set": {"open": False}},
+    )
+    return scholarship_dict, status.HTTP_200_OK
 
 
 @scholarships.route("/<scholarship_id>/", methods=["GET"])
@@ -86,10 +99,10 @@ def judge(scholarship_id):
         scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
         if not scholarship:
             return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
-        judges = request.form.get("judges")
-        db.scholarship.update_one(
+        judges = request.get_json().get("judges").spli(",")
+        db.scholarships.update_one(
             {"_id": ObjectId(scholarship_id)},
-            {"$set": {"judges ": judges}},
+            {"$set": {"judges": judges}},
         )
         return {"message": "Judges successfully added"}, status.HTTP_200_OK
 

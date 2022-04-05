@@ -129,13 +129,14 @@ const ScholarshipForm = () => {
                   required
                   id="weightings"
                   name="weightings"
-                  label="Weightings (ex. Academics: 50, Volunteer: 50) (Must sum to 100)"
+                  label="Weightings (in the format of: 'academic: x, leadership: y, volunteer: z') (Must sum to 100)"
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
+                  multiline
                   id="description"
                   name="description"
                   label="Description"

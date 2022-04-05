@@ -2,12 +2,17 @@ import {
   Button,
   CircularProgress,
   Container,
+  Dialog,
+  DialogActions,
+  DialogContentText,
+  DialogTitle,
   Grid,
   Paper,
+  TextField,
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "react-router";
 import useSWR from "swr";
 import NavBar from "./NavBar";
@@ -28,6 +33,47 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
   const userId = sessionStorage.getItem("userId");
   const userType = sessionStorage.getItem("userType");
   const { application } = getApplication(scholarshipId, userId);
+  const [openAddJudge, setOpenAddJudge] = useState(false);
+  const [judgesValue, setJudgesValue] = useState("");
+
+  const handleClickOpen = () => {
+    setOpenAddJudge(true);
+  };
+
+  const handleClose = () => {
+    setOpenAddJudge(false);
+  };
+
+  const handleSubmit = (event) => {
+    setOpenAddJudge(false);
+    const requestBody = {
+      judges: judgesValue,
+    };
+    console.log("in handle submit, sending" + requestBody.judges);
+
+    if (!judgesValue) {
+      return;
+    }
+
+    axios
+      .post(`/api/scholarships/${scholarshipId}/judge/`, requestBody)
+      .then((resp) => {
+        console.log(`resp recv'd: ${JSON.stringify(resp)}`);
+        if (resp.status === 200) {
+          console.log("Judges added successfully");
+        }
+      });
+  };
+
+  const handleCloseScholarship = () => {
+    console.log("closing scholarship " + scholarshipId);
+    axios.post(`/api/scholarships/${scholarshipId}/close`, {}).then((resp) => {
+      console.log("recv'd resp: " + JSON.stringify(resp));
+      if (resp.status === 200) {
+        console.log("scholarship successfully closed");
+      }
+    });
+  };
 
   if (isLoading) {
     return (
@@ -82,7 +128,7 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
 
           {showButton && (
             <Grid item textAlign="right" sx={{ mt: 5 }}>
-              {userType === "student" && (
+              {userType === "student" && scholarship && scholarship.open && (
                 <Button
                   variant="contained"
                   href={`/scholarships/${scholarshipId}/apply`}
@@ -91,13 +137,52 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
                   {application && "Edit Application"}
                 </Button>
               )}
-              {userType === "judge" && (
-                <Button
-                  variant="contained"
-                  href={`/scholarships/${scholarshipId}/judge`}
-                >
-                  Judge
-                </Button>
+              {userType === "judge" &&
+                scholarship &&
+                scholarship.judges.includes(userId) && (
+                  <Button
+                    variant="contained"
+                    href={`/scholarships/${scholarshipId}/judge`}
+                  >
+                    Judge
+                  </Button>
+                )}
+              {scholarship && userId === scholarship.organization_id && (
+                <Grid item component="form">
+                  <Button variant="contained" onClick={handleClickOpen}>
+                    Add judges
+                  </Button>{" "}
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={handleCloseScholarship}
+                  >
+                    Close scholarship
+                  </Button>
+                  <Dialog
+                    open={openAddJudge}
+                    onClose={handleClose}
+                    sx={{ py: 2, px: 2, m: 2 }}
+                  >
+                    <DialogTitle>Add judge</DialogTitle>
+                    <DialogContentText>
+                      Add judges by typing in their user Ids
+                    </DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="addJudges"
+                      label="Add judges by userId, separate with ','"
+                      type="text"
+                      fullWidth
+                      onChange={(e) => setJudgesValue(e.target.value)}
+                    />
+                    <DialogActions>
+                      <Button onClick={handleClose}>Cancel</Button>
+                      <Button onClick={handleSubmit}>Submit</Button>
+                    </DialogActions>
+                  </Dialog>
+                </Grid>
               )}
             </Grid>
           )}
