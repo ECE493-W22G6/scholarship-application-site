@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Button,
   CircularProgress,
   Grid,
   Paper,
@@ -11,7 +12,7 @@ import React from "react";
 import useSWR from "swr";
 
 const UserInfo = ({ userId }) => {
-  // const userId = sessionStorage.getItem("userId");
+  const userType = sessionStorage.getItem("userType");
   // const {user, isLoading} = useUser('62463e3ebd256454fbdc71fb);
   const { user, isLoading } = useUser(userId);
 
@@ -55,6 +56,13 @@ const UserInfo = ({ userId }) => {
         {user.description && (
           <Grid item xs={12}>
             <p>{user.description}</p>
+          </Grid>
+        )}
+        {userType === "organization" && (
+          <Grid item xs={12}>
+            <Button fullWidth variant="contained" href="/submitscholarship">
+              Create a scholarship
+            </Button>
           </Grid>
         )}
       </Grid>
