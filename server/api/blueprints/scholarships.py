@@ -39,7 +39,7 @@ def scholarship():
             question.strip() for question in new_scholarship.get("questions").split(";")
         ]
         new_scholarship["weightings"] = {
-            criteria: weighting
+            criteria: float(weighting) / 100
             for [criteria, weighting] in [
                 criteriaweighting.split(":")
                 for criteriaweighting in [

@@ -129,7 +129,7 @@ const ScholarshipForm = () => {
                   required
                   id="weightings"
                   name="weightings"
-                  label="Weightings (ex. Academics: 50, Volunteer: 50)"
+                  label="Weightings (ex. Academics: 50, Volunteer: 50) (Must sum to 100)"
                   fullWidth
                 />
               </Grid>
