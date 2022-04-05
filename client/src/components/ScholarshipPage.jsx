@@ -1,5 +1,6 @@
 import {
   Button,
+  Card,
   CircularProgress,
   Container,
   Dialog,
@@ -8,6 +9,7 @@ import {
   DialogTitle,
   Grid,
   Paper,
+  Stack,
   TextField,
   Typography,
 } from "@mui/material";
@@ -34,6 +36,7 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
   const userType = sessionStorage.getItem("userType");
   const { application } = getApplication(scholarshipId, userId);
   const [openAddJudge, setOpenAddJudge] = useState(false);
+  const [openWinners, setOpenWinners] = useState(false);
   const [judgesValue, setJudgesValue] = useState("");
 
   const handleClickOpen = () => {
@@ -81,6 +84,7 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
       console.log("recv'd resp: " + JSON.stringify(resp));
       if (resp.status === 200) {
         console.log("mcdm successful");
+        setOpenWinners(true);
       }
     });
   };
@@ -160,28 +164,51 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
                 )}
               {scholarship && userId === scholarship.organization_id && (
                 <Grid item component="form">
-                  <Button variant="contained" onClick={handleClickOpen}>
-                    Add judges
-                  </Button>{" "}
-                  <Button
-                    variant="contained"
-                    color="error"
-                    onClick={handleCloseScholarship}
-                  >
-                    Close scholarship
-                  </Button>{" "}
+                  {scholarship && scholarship.open && (
+                    <div>
+                      <Button variant="contained" onClick={handleClickOpen}>
+                        Add judges
+                      </Button>{" "}
+                      <Button
+                        variant="contained"
+                        color="error"
+                        onClick={handleCloseScholarship}
+                      >
+                        Close scholarship
+                      </Button>
+                    </div>
+                  )}{" "}
                   {scholarship.applications &&
                     scholarship.judged_applications &&
                     scholarship.applications.length *
                       scholarship.judges.length ===
-                      scholarship.judged_applications.length && (
-                      <Button
-                        variant="contained"
-                        color="success"
-                        onClick={handleGetWinners}
-                      >
-                        Get winners
-                      </Button>
+                      scholarship.judged_applications.length &&
+                    !scholarship.open && (
+                      <div>
+                        <Button
+                          variant="contained"
+                          color="success"
+                          onClick={handleGetWinners}
+                        >
+                          Get winners
+                        </Button>
+                        {scholarship.winners && scholarship.winner_emails && (
+                          <Dialog
+                            open={openWinners}
+                            onClose={() => setOpenWinners(false)}
+                            sx={{ py: 2, px: 2, m: 2 }}
+                          >
+                            <DialogTitle>Scholarship winners</DialogTitle>
+                            <Stack spacing={2} sx={{ p: 2 }}>
+                              {scholarship.winners.map((winner, index) => (
+                                <Card key={`winner${index}`} sx={{ p: 2 }}>
+                                  {scholarship.winner_emails[index]}
+                                </Card>
+                              ))}
+                            </Stack>
+                          </Dialog>
+                        )}
+                      </div>
                     )}
                   <Dialog
                     open={openAddJudge}

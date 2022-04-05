@@ -51,8 +51,6 @@ def scholarship():
         new_scholarship["organization_name"] = user.get("first_name")
         new_scholarship["open"] = True
 
-        new_scholarship["winners"] = ""
-
         db.scholarships.insert_one(new_scholarship)
 
         return {"message": "Scholarship successfully created"}, status.HTTP_201_CREATED
@@ -67,7 +65,8 @@ def close_scholarship(scholarship_id):
         {"_id": ObjectId(scholarship_id)},
         {"$set": {"open": False}},
     )
-    return scholarship_dict, status.HTTP_200_OK
+
+    return {"message": "Scholarship successfully closed"}, status.HTTP_200_OK
 
 
 @scholarships.route("/<scholarship_id>/", methods=["GET"])
@@ -127,11 +126,7 @@ def judge_application(scholarship_id, application_id):
     if not application:
         return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
 
-    student_id = request_data.get("student_id")
-    mcdm_input = {}
-    for criteria, score in request_data.get("judge_scores").items():
-        mcdm_input[f"{student_id}.{criteria}"] = int(score)
-    scorecard_dict = request_data | mcdm_input
+    scorecard_dict = request_data
     inserted_scorecard = db.scorecards.insert_one(scorecard_dict)
 
     db.scholarships.update_one(

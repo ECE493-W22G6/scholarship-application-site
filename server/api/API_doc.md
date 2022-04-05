@@ -393,23 +393,23 @@ Success notification:
 
 Gets feeded scholarship_id which then the score is calculated for that student.
 the score of the student is stored in student_total_score.
-Each student for that scholarship is paired up with a total scored which is then 
-sorted. 
+Each student for that scholarship is paired up with a total scored which is then
+sorted.
 
 num_of_awards is the amount of awards available for that scholarship and therefore
-the top X students are posted in db.scholarships['winners'], X being the 
+the top X students are posted in db.scholarships['winners'], X being the
 num_of_awards
 
-input example: 
+input example:
 {
-    "scholarship_id" : "101"
+"scholarship_id" : "101"
 }
 
 Success response:
 
-  - message: Calculations successful,
-    winners: LIST OF WINNERS
-    code: 200 ok
+- message: Calculations successful,
+  winners: LIST OF WINNERS
+  code: 200 ok
 
 ### POST `/scholarships/winners/`
 
@@ -423,4 +423,7 @@ Success response:
 
 - message: Calculations successful,
   winners: LIST OF WINNERS
+  code: 200 ok
+- message: Retrieved previous calculation
+  winners: [<user_id>...]
   code: 200 ok
