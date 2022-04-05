@@ -117,7 +117,7 @@ const getApplication = (scholarshipId, studentId) => {
   const { data, error } = useSWR({ url, args }, appFetcher);
   console.log("get app result " + JSON.stringify(data));
 
-  return { application: data, error };
+  return { application: data, isLoading: !data && !error, isError: error };
 };
 
 const appFetcher = ({ url, args }) =>

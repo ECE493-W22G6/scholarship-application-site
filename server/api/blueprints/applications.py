@@ -45,12 +45,23 @@ def application_root():
 
     new_application = json.loads(request.get_data().decode("utf-8"))
 
-    application = db.applications.insert_one(new_application)
-    # add application id to scholarship applications
-    db.scholarships.update_one(
-        {"_id": ObjectId(scholarship_id)},
-        {"$push": {"applications": str(application.inserted_id)}},
+    # check if application already exists
+    application_dict = db.applications.find_one(
+        {"scholarship_id": scholarship_id, "user_id": user_id}
     )
+
+    if application_dict:
+        application = db.applications.find_one_and_replace(
+            {"scholarship_id": scholarship_id, "user_id": user_id}, new_application
+        )
+    else:
+        application = db.applications.insert_one(new_application)
+        # add application id to scholarship applications
+        db.scholarships.update_one(
+            {"_id": ObjectId(scholarship_id)},
+            {"$push": {"applications": str(application.inserted_id)}},
+        )
+
     return {
         "message": "Application successfully submitted",
         "application_id": str(application.inserted_id),

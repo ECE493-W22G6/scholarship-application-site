@@ -57,6 +57,14 @@ const NavBar = () => {
               <Link
                 variant="button"
                 color="text.primary"
+                href="/notifications"
+                sx={{ my: 1, mx: 1.5 }}
+              >
+                Notifications
+              </Link>
+              <Link
+                variant="button"
+                color="text.primary"
                 href="/settings"
                 sx={{ my: 1, mx: 1.5 }}
               >

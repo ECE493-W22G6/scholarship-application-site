@@ -5,6 +5,7 @@ import AllScholarshipsPage from "./components/AllScholarshipsPage";
 import App from "./components/App";
 import ApplyPage from "./components/ApplyPage";
 import JudgePage from "./components/JudgePage";
+import NotificationsPage from "./components/NotificationsPage";
 import OrganizationPage from "./components/OrganizationPage";
 import ScholarshipForm from "./components/ScholarshipForm";
 import ScholarshipPage from "./components/ScholarshipPage";
@@ -36,8 +37,7 @@ render(
       <Route path="/scholarships/:scholarshipId/apply" element={<ApplyPage />}/>
       <Route path="/scholarships/:scholarshipId/judge/:applicationId" element={<JudgePage />}/>
       <Route path="/scholarships/" element={<AllScholarshipsPage />}/>
-
-      {/* <Route path="/notifications" element={<Notifications/>}></Route> */}
+      <Route path="/notifications" element={<NotificationsPage/>}></Route>
     </Routes>
   </BrowserRouter>,
   rootElement
