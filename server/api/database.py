@@ -58,3 +58,18 @@ def update_user_icon(user_id, new_icon_url):
         {"_id": ObjectId(user_id)}, {"$set": {"icon_url": new_icon_url}}
     )
     return resp
+
+
+def get_scorecards(scholarship_id):
+    cursor = db.scorecards.find({"scholarship_id": scholarship_id})
+
+    if cursor:
+        return cursor
+    else:
+        return {}
+
+def add_winners(student_winners, scholarship_id):
+    resp = db.scholarships.update_one(
+        {"_id": ObjectId(scholarship_id)}, {"$set": {"winners": student_winners}}
+    )
+    return resp

@@ -51,6 +51,8 @@ def scholarship():
         new_scholarship["organization_name"] = user.get("first_name")
         new_scholarship["open"] = True
 
+        new_scholarship["winners"] = ""
+
         db.scholarships.insert_one(new_scholarship)
 
         return {"message": "Scholarship successfully created"}, status.HTTP_201_CREATED

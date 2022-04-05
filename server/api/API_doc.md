@@ -389,6 +389,38 @@ Success notification:
 
 ## MCDM
 
-### GET `/mcdm/`
+### POST `/mcdm`
 
-To be implemented
+Gets feeded scholarship_id which then the score is calculated for that student.
+the score of the student is stored in student_total_score.
+Each student for that scholarship is paired up with a total scored which is then 
+sorted. 
+
+num_of_awards is the amount of awards available for that scholarship and therefore
+the top X students are posted in db.scholarships['winners'], X being the 
+num_of_awards
+
+input example: 
+{
+    "scholarship_id" : "101"
+}
+
+Success response:
+
+  - message: Calculations successful,
+    winners: LIST OF WINNERS
+    code: 200 ok
+
+### POST `/scholarships/winners/`
+
+Adds the winners for the given scholarship id
+
+Request body:
+
+- student_winners, student_id from mcdm
+
+Success response:
+
+- message: Calculations successful,
+  winners: LIST OF WINNERS
+  code: 200 ok
