@@ -68,3 +68,11 @@ def get_scorecards(scholarship_id):
         return cursor
     else:
         return {}
+
+def add_winners(student_winners, scholarship_id):
+    # user = db.scholarships.insert_one(user)
+
+    resp = db.scholarships.update_one(
+        {"_id": ObjectId(scholarship_id)}, {"$set": {"winners": student_winners}}
+    )
+    return resp
