@@ -105,9 +105,11 @@ const ScholarshipInfo = ({ scholarshipId, showButton }) => {
         </Typography>
         <hr />
         <Grid container spacing={3} justifyContent="flex">
-          <Grid item xs={12}>
-            <Typography variant="h3">{scholarship.name}</Typography>
-          </Grid>
+          {scholarship && (
+            <Grid item xs={12}>
+              <Typography variant="h3">{scholarship.name}</Typography>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Typography variant="h5">
               Organization:{" "}
