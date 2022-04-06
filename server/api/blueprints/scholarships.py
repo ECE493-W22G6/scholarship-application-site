@@ -100,7 +100,7 @@ def judge(scholarship_id):
         scholarship = db.scholarships.find({"_id": ObjectId(scholarship_id)})
         if not scholarship:
             return {"message": "Scholarship not found"}, status.HTTP_404_NOT_FOUND
-        judges = request.get_json().get("judges").spli(",")
+        judges = request.get_json().get("judges").split(",")
         db.scholarships.update_one(
             {"_id": ObjectId(scholarship_id)},
             {"$set": {"judges": judges}},
