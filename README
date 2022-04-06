@@ -1,0 +1,15 @@
+# Running instructions
+
+## Dependencies needed to installed before running:
+
+- yarn package manager
+- python 3.10
+- poetry package manager
+
+## Front-end
+
+`cd client && yarn install && yarn start`
+
+## Back-end
+
+`cd server && poetry install && poetry run flask run`
