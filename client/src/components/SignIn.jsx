@@ -126,6 +126,7 @@ export default function SignIn() {
               label="Remember me"
             /> */}
             <Button
+              id="signInFormButton"
               type="submit"
               fullWidth
               variant="contained"
