@@ -58,3 +58,40 @@ def update_user_icon(user_id, new_icon_url):
         {"_id": ObjectId(user_id)}, {"$set": {"icon_url": new_icon_url}}
     )
     return resp
+
+
+def get_user_email(user_id):
+    resp = db.users.find_one({"_id": ObjectId(user_id)}).get("email")
+
+    return resp
+
+
+def get_scorecards(scholarship_id):
+    cursor = db.scorecards.find({"scholarship_id": scholarship_id})
+
+    if cursor:
+        return cursor
+    else:
+        return {}
+
+
+def add_winners(student_winners, scholarship_id):
+    emails = [get_user_email(winner) for winner in student_winners]
+    update_obj = {"winners": student_winners, "winner_emails": emails}
+    resp = db.scholarships.update_one(
+        {"_id": ObjectId(scholarship_id)},
+        {"$set": update_obj},
+    )
+
+    s = db.scholarships.find_one({"_id": ObjectId(scholarship_id)})
+    o = db.users.find_one({"_id": ObjectId(s.get("organization_id"))})
+
+    # add notifications to winners' inbox
+    for winner in student_winners:
+        db.notifications.insert_one(
+            {
+                "user_id": winner,
+                "message": f"You won the scholarship: {s.get('name')}! Please email the organization at {o.get('email')} to receive your award.",
+            }
+        )
+    return update_obj

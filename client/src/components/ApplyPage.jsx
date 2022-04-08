@@ -16,14 +16,23 @@ import axios from "axios";
 import React, { useState } from "react";
 import { Navigate, useParams } from "react-router";
 import NavBar from "./NavBar";
-import { getScholarshipInfo, ScholarshipInfo } from "./ScholarshipPage";
+import {
+  getApplication,
+  getScholarshipInfo,
+  ScholarshipInfo,
+} from "./ScholarshipPage";
 
 const ApplyPage = () => {
+  const studentId = sessionStorage.getItem("userId");
   const params = useParams();
   const { scholarship, isLoading } = getScholarshipInfo(params.scholarshipId);
   const [grade, setGrade] = useState(6);
   const [redirect, setRedirect] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const { application, applicationIsLoading } = getApplication(
+    params.scholarshipId,
+    studentId
+  );
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -39,14 +48,15 @@ const ApplyPage = () => {
       data.get(`question${i}`)
     );
     const application = {
-      user_id: localStorage.getItem("userId"),
+      user_id: sessionStorage.getItem("userId"),
       scholarship_id: params.scholarshipId,
       first_name: firstName,
       last_name: lastName,
       email,
       phone,
       grade,
-      address: `${address1}, ${address2}`,
+      address1: address1,
+      address2: address2,
       school,
       answers: questionAnswers,
     };
@@ -102,6 +112,7 @@ const ApplyPage = () => {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                defaultValue={application && application.first_name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -112,6 +123,7 @@ const ApplyPage = () => {
                 label="Last Name"
                 name="lastName"
                 autoComplete="family-name"
+                defaultValue={application && application.last_name}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -122,6 +134,7 @@ const ApplyPage = () => {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                defaultValue={application && application.email}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -131,6 +144,7 @@ const ApplyPage = () => {
                 label="Phone number"
                 name="phone"
                 autoComplete="phone"
+                defaultValue={application && application.phone}
               />
             </Grid>
             <Grid item xs={12}>
@@ -141,6 +155,7 @@ const ApplyPage = () => {
                 label="Address line 1"
                 fullWidth
                 autoComplete="shipping address-line1"
+                defaultValue={application && application.address1}
               />
             </Grid>
             <Grid item xs={12}>
@@ -150,6 +165,7 @@ const ApplyPage = () => {
                 label="Address line 2"
                 fullWidth
                 autoComplete="shipping address-line2"
+                defaultValue={application && application.address2}
               />
             </Grid>
             <Grid item xs={6}>
@@ -161,6 +177,7 @@ const ApplyPage = () => {
                   value={grade}
                   label="Grade"
                   onChange={(e) => setGrade(e.target.value)}
+                  defaultValue={application && application.grade}
                 >
                   <MenuItem value={6}>6</MenuItem>
                   <MenuItem value={7}>7</MenuItem>
@@ -173,7 +190,13 @@ const ApplyPage = () => {
               </FormControl>
             </Grid>
             <Grid item xs={6}>
-              <TextField id="school" name="school" label="School" fullWidth />
+              <TextField
+                id="school"
+                name="school"
+                label="School"
+                fullWidth
+                defaultValue={application && application.school}
+              />
             </Grid>
             <Grid sx={{ m: 1 }} />
             <Grid item xs={12}>
@@ -192,6 +215,7 @@ const ApplyPage = () => {
                     name={`question${index}`}
                     fullWidth
                     sx={{ mt: 1, mb: 1 }}
+                    defaultValue={application && application.answers[index]}
                   />
                 </Grid>
               ))}

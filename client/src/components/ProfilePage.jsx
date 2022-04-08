@@ -1,10 +1,10 @@
 import { Container } from "@mui/material";
 import React from "react";
-import NavBar from "./components/NavBar";
-import UserInfo from "./components/UserInfo";
+import NavBar from "./NavBar";
+import UserInfo from "./UserInfo";
 
 const ProfilePage = () => {
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
 
   return (
     <div className="ProfilePage">

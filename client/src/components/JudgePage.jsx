@@ -12,8 +12,8 @@ import {
   Typography,
 } from "@mui/material";
 import axios from "axios";
-import React from "react";
-import { useParams } from "react-router";
+import React, { useState } from "react";
+import { Navigate, useParams } from "react-router";
 import useSWR from "swr";
 import NavBar from "./NavBar";
 import { getScholarshipInfo, ScholarshipInfo } from "./ScholarshipPage";
@@ -28,6 +28,7 @@ const JudgePage = () => {
     getScholarshipInfo(scholarshipId);
   const { application, applicationIsLoading } =
     getApplicationInfo(applicationId);
+  const [redirect, setRedirect] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -43,7 +44,7 @@ const JudgePage = () => {
     const requestBody = {
       application_id: applicationId,
       scholarship_id: scholarshipId,
-      judge_id: localStorage.getItem("userId"),
+      judge_id: sessionStorage.getItem("userId"),
       student_id: application.user_id,
       judge_scores: judgeScoreMap,
     };
@@ -58,12 +59,16 @@ const JudgePage = () => {
         console.log(`recv'd resp: ${JSON.stringify(resp)}`);
         if (resp.status === 201) {
           console.log(resp.data.message);
+          setRedirect(true);
         }
       });
   };
 
   return (
     <ThemeProvider theme={theme}>
+      {redirect && (
+        <Navigate to={`/scholarships/${params.scholarshipId}/judge`} />
+      )}
       <NavBar />
       <Container component="main" maxWidth="md">
         <CssBaseline />

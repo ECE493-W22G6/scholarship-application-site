@@ -22,7 +22,7 @@ const ScholarshipForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const organizationId = localStorage.getItem("userId");
+    const organizationId = sessionStorage.getItem("userId");
     const name = data.get("name");
     const amount = data.get("amount");
     const numberOfAwards = data.get("numberOfAwards");
@@ -129,13 +129,14 @@ const ScholarshipForm = () => {
                   required
                   id="weightings"
                   name="weightings"
-                  label="Weightings (ex. Academics: 50, Volunteer: 50)"
+                  label="Weightings (in the format of: 'academic: x, leadership: y, volunteer: z') (Must sum to 100)"
                   fullWidth
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
+                  multiline
                   id="description"
                   name="description"
                   label="Description"

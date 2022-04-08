@@ -3,17 +3,20 @@ import { render } from "react-dom";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import App from "./components/App";
-import SignIn from "./components/SignIn";
-import SignUp from "./components/SignUp";
 import SettingsPage from "./components/SettingsPage2";
 import SettingsPage2 from "./components/SettingsPageDEPRACATED";
-import ProfilePage from "./ProfilePage";
+import AllScholarshipsPage from "./components/AllScholarshipsPage";
+import ApplyPage from "./components/ApplyPage";
+import JudgePage from "./components/JudgePage";
+import NotificationsPage from "./components/NotificationsPage";
 import OrganizationPage from "./components/OrganizationPage";
 import ScholarshipForm from "./components/ScholarshipForm";
 import ScholarshipPage from "./components/ScholarshipPage";
-import ApplyPage from "./components/ApplyPage";
-import JudgePage from "./components/JudgePage";
-import AllScholarshipsPage from "./components/AllScholarshipsPage";
+import SignIn from "./components/SignIn";
+import SignUp from "./components/SignUp";
+import "./index.css";
+import ProfilePage from "./components/ProfilePage";
+import JudgeApplicationsPage from "./components/JudgeApplicationsPage";
 
 import "./index.css";
 
@@ -37,10 +40,10 @@ render(
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>
       <Route path="/scholarships/:scholarshipId" element={<ScholarshipPage />}/>
       <Route path="/scholarships/:scholarshipId/apply" element={<ApplyPage />}/>
+      <Route path="/scholarships/:scholarshipId/judge" element={<JudgeApplicationsPage />}/>
       <Route path="/scholarships/:scholarshipId/judge/:applicationId" element={<JudgePage />}/>
       <Route path="/scholarships/" element={<AllScholarshipsPage />}/>
-
-      {/* <Route path="/notifications" element={<Notifications/>}></Route> */}
+      <Route path="/notifications" element={<NotificationsPage/>}></Route>
     </Routes>
   </BrowserRouter>,
   rootElement

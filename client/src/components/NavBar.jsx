@@ -11,9 +11,10 @@ import { GlobalStyles } from "@mui/styled-engine";
 import { useTheme } from '@mui/material/styles';
 
 const NavBar = () => {
-  const userId = localStorage.getItem("userId");
+  const userId = sessionStorage.getItem("userId");
+  const userType = sessionStorage.getItem("userType");
   const handleClick = (event) => {
-    localStorage.clear();
+    sessionStorage.clear();
   };
 
   const theme = useTheme();
@@ -55,10 +56,22 @@ const NavBar = () => {
               <Link
                 variant="button"
                 color="text.primary"
-                href="/profile"
+                href={
+                  userType === "organization"
+                    ? `/organizations/${userId}`
+                    : "profile"
+                }
                 sx={{ my: 1, mx: 1.5 }}
               >
                 Profile
+              </Link>
+              <Link
+                variant="button"
+                color="text.primary"
+                href="/notifications"
+                sx={{ my: 1, mx: 1.5 }}
+              >
+                Notifications
               </Link>
               <Link
                 variant="button"
