@@ -6,6 +6,7 @@ import mongomock
 from unittest.mock import patch
 from api.api import create_app
 from api import database
+import json
 
 
 class PyMongoMock(mongomock.MongoClient):
@@ -25,7 +26,11 @@ class TestUserEndpoints(unittest.TestCase):
         with patch.object(database, "db", PyMongoMock().db):
             test_client = create_app().test_client()
 
-            resp = test_client.post("/users/register/", data=request)
+            resp = test_client.post(
+                "/users/register/",
+                data=json.dumps(request),
+                content_type="application/json",
+            )
 
             self.assertEqual(resp.status_code, 201)
 
