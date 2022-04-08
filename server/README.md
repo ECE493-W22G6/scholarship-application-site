@@ -7,11 +7,6 @@ To change python version, install `pyenv` and run the following commands:
 This server uses poetry as a package manager. To install dependencies, run
 `poetry install`
 
-## Development instructions
-
-To start up a virtual env via poetry and activate it:
-`poetry shell`
-
 ### Running instructions
 
 To run the server:
