@@ -8,12 +8,15 @@ import {
   CssBaseline,
 } from "@mui/material";
 import { GlobalStyles } from "@mui/styled-engine";
+import { useTheme } from '@mui/material/styles';
 
 const NavBar = () => {
   const userId = localStorage.getItem("userId");
   const handleClick = (event) => {
     localStorage.clear();
   };
+
+  const theme = useTheme();
 
   return (
     <React.Fragment>
@@ -25,7 +28,10 @@ const NavBar = () => {
         position="sticky"
         color="default"
         elevation={0}
-        sx={{ borderBottom: (theme) => `1px solid ${theme.palette.divider}` }}
+        sx={{ 
+          zIndex: theme.zIndex.drawer + 1,
+          borderBottom: (theme) => `1px solid ${theme.palette.divider}` 
+        }}
       >
         {userId && (
           <Toolbar sx={{ flexWrap: "wrap" }}>

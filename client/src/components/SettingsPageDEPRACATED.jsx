@@ -53,7 +53,7 @@ const styles = {
   },
 };
 
-const SettingsPage = () => {
+const SettingsPage2 = () => {
   const userType = localStorage.getItem("userType");
   const userId = localStorage.getItem("userId");
   const { user, isLoading } = useUser(userId);
@@ -87,7 +87,7 @@ const SettingsPage = () => {
     axios.post(`/api/users/${userId}/icon/`, requestBody).then((resp) => {
       console.log(`recv'd resp: ${JSON.stringify(resp)}`);
       if (resp.status === 200) {
-        console.log("Password changed successfully");
+        console.log("Icon changed successfully");
       }
     });
   };
@@ -171,4 +171,4 @@ const SettingsPage = () => {
   );
 };
 
-export default withStyles(styles)(SettingsPage);
+export default withStyles(styles)(SettingsPage2);
