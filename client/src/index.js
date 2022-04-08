@@ -5,7 +5,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import App from "./components/App";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
-import SettingsPage from "./components/SettingsPage";
+import SettingsPage from "./components/SettingsPage2";
+import SettingsPage2 from "./components/SettingsPageDEPRACATED";
 import ProfilePage from "./ProfilePage";
 import OrganizationPage from "./components/OrganizationPage";
 import ScholarshipForm from "./components/ScholarshipForm";
@@ -30,6 +31,7 @@ render(
       <Route path="/signin" element={<SignIn />}></Route>
       <Route path="/signup" element={<SignUp />}></Route>
       <Route path="/settings" element={<SettingsPage />}></Route>
+      <Route path="/settings2" element={<SettingsPage2 />}></Route>
       <Route path="/profile" element={<ProfilePage />}></Route>
       <Route path="/organizations/:organizationId" element={<OrganizationPage />}></Route>
       <Route path="/submitscholarship" element={<ScholarshipForm />}/>
