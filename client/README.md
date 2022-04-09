@@ -30,4 +30,4 @@ Runs the backend api such that front end requests will be sent and processed app
 
 ### `yarn run cypress open`
 
-Runs cypress tests.
+Runs cypress tests. Click on SystemTests.spec.js to just run those tests
