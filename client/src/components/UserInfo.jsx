@@ -60,7 +60,7 @@ const UserInfo = ({ userId }) => {
         )}
         {userType === "organization" && (
           <Grid item xs={12}>
-            <Button fullWidth variant="contained" href="/submitscholarship">
+            <Button id="CreateScholarshipButton" fullWidth variant="contained" href="/submitscholarship">
               Create a scholarship
             </Button>
           </Grid>

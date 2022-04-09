@@ -26,6 +26,7 @@ const NavBar = () => {
       />
       <CssBaseline />
       <AppBar
+        id = "AppBar"
         position="sticky"
         color="default"
         elevation={0}
@@ -46,6 +47,7 @@ const NavBar = () => {
             </Typography>
             <nav>
               <Link
+                id="allScholarshipsButton"
                 variant="button"
                 color="text.primary"
                 href="/scholarships"
@@ -54,6 +56,7 @@ const NavBar = () => {
                 All scholarships
               </Link>
               <Link
+                id = "profileButton"
                 variant="button"
                 color="text.primary"
                 href={
@@ -66,6 +69,7 @@ const NavBar = () => {
                 Profile
               </Link>
               <Link
+                id="notificationsButton"
                 variant="button"
                 color="text.primary"
                 href="/notifications"
@@ -74,6 +78,7 @@ const NavBar = () => {
                 Notifications
               </Link>
               <Link
+                id="settingsButton"
                 variant="button"
                 color="text.primary"
                 href="/settings"
@@ -83,6 +88,7 @@ const NavBar = () => {
               </Link>
             </nav>
             <Button
+              id="logOutButton"
               href="/signin"
               variant="outlined"
               sx={{ my: 1, mx: 1.5 }}
@@ -102,10 +108,10 @@ const NavBar = () => {
             >
               Scholarship Application Site
             </Typography>
-            <Button href="/signin" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
+            <Button id="signInButton" href="/signin" variant="outlined" sx={{ my: 1, mx: 1.5 }}>
               Sign in
             </Button>
-            <Button href="/signup" variant="contained" sx={{ my: 1, mx: 1.5 }}>
+            <Button id="signUpButton" href="/signup" variant="contained" sx={{ my: 1, mx: 1.5 }}>
               Sign up
             </Button>
           </Toolbar>

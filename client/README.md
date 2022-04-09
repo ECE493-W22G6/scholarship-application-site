@@ -25,3 +25,9 @@ Runs the backend api such that front end requests will be sent and processed app
 ## Adding new dependencies/packages
 
 ### `yarn add @<dependency name>`
+
+## Run Cypress tests
+
+### `yarn run cypress open`
+
+Runs cypress tests. Click on SystemTests.spec.js to just run those tests

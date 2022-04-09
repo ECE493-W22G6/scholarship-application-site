@@ -172,15 +172,16 @@ export default function SignUp() {
                     label="type"
                     onChange={handleChange}
                   >
-                    <MenuItem value={"student"}>Student</MenuItem>
-                    <MenuItem value={"organization"}>Organization</MenuItem>
-                    <MenuItem value={"judge"}>Judge</MenuItem>
+                    <MenuItem name={"student"} value={"student"}>Student</MenuItem>
+                    <MenuItem name = {"organization"} value={"organization"}>Organization</MenuItem>
+                    <MenuItem name={"judge"} value={"judge"}>Judge</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
             </Grid>
             <Button
               type="submit"
+              id="signUpFormButton"
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

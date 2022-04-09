@@ -95,6 +95,7 @@ const ScholarshipForm = () => {
               <Grid item xs={6}>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
+                    id="DatePicker"
                     label="End date"
                     value={endDate}
                     onChange={(newValue) => {
@@ -145,7 +146,7 @@ const ScholarshipForm = () => {
               </Grid>
             </Grid>
             <Grid textAlign="right">
-              <Button type="submit" variant="contained" sx={{ mt: 3 }}>
+              <Button id="SubmitScholarship" type="submit" variant="contained" sx={{ mt: 3 }}>
                 Submit
               </Button>
             </Grid>
